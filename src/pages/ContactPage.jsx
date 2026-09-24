@@ -1,0 +1,22 @@
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import { ArrowLeft, CheckCircle2, LoaderCircle, Mail, MapPin, Send } from 'lucide-react'
+import { Brand } from '../components/Brand'
+import { submitPublicContact } from '../services/repository'
+
+export function ContactPage() {
+  const [form, setForm] = useState({ name: '', email: '', company: '', message: '', website: '' })
+  const [status, setStatus] = useState('idle')
+  const [error, setError] = useState('')
+  const submit = async (event) => {
+    event.preventDefault(); setError('')
+    if (form.website) return
+    if (form.name.trim().length < 2 || form.message.trim().length < 10) { setError('Completa tu nombre y un mensaje de al menos 10 caracteres.'); return }
+    setStatus('loading')
+    try { await submitPublicContact({ name: form.name.trim(), email: form.email.trim(), company: form.company.trim(), message: form.message.trim() }); setStatus('success') }
+    catch (submitError) { setError(submitError.message || 'No fue posible enviar el mensaje.'); setStatus('idle') }
+  }
+  const input = (name) => ({ value: form[name], onChange: (event) => setForm({ ...form, [name]: event.target.value }) })
+  return <div className="min-h-screen bg-slate-950"><header className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 sm:px-8"><Brand inverse /><Link to="/login" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-300 hover:text-white"><ArrowLeft className="h-4 w-4" />Volver al acceso</Link></header><main className="mx-auto grid max-w-7xl gap-10 px-5 py-12 sm:px-8 lg:grid-cols-[.8fr_1.2fr] lg:py-20"><section className="text-white"><p className="text-xs font-bold uppercase tracking-[.2em] text-red-400">Contacto</p><h1 className="mt-3 text-4xl font-extrabold tracking-tight sm:text-5xl">Conversemos sobre control y seguridad.</h1><p className="mt-6 max-w-lg leading-7 text-slate-400">Este canal almacena únicamente la información necesaria para responder tu consulta académica.</p><div className="mt-10 space-y-4"><div className="flex items-center gap-3 text-sm text-slate-300"><Mail className="h-5 w-5 text-red-400" /> auditoria360@proyecto.edu.pe</div><div className="flex items-center gap-3 text-sm text-slate-300"><MapPin className="h-5 w-5 text-red-400" /> Lima, Perú</div></div></section><motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="rounded-3xl bg-white p-6 shadow-2xl sm:p-8">{status === 'success' ? <div className="grid min-h-[420px] place-items-center text-center"><div><div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-emerald-50 text-emerald-600"><CheckCircle2 className="h-8 w-8" /></div><h2 className="mt-5 text-2xl font-bold text-slate-900">Mensaje recibido</h2><p className="mt-2 text-sm text-slate-500">Gracias por contactarnos. Tu solicitud fue registrada correctamente.</p><button className="btn-secondary mt-6" onClick={() => { setForm({ name: '', email: '', company: '', message: '', website: '' }); setStatus('idle') }}>Enviar otro mensaje</button></div></div> : <form onSubmit={submit}><h2 className="text-2xl font-bold text-slate-900">Envíanos un mensaje</h2><p className="mt-2 text-sm text-slate-500">Todos los campos marcados son obligatorios.</p><div className="mt-7 grid gap-4 sm:grid-cols-2"><div><label className="label">Nombre *</label><input className="input" required {...input('name')} /></div><div><label className="label">Correo *</label><input className="input" type="email" required {...input('email')} /></div><div className="sm:col-span-2"><label className="label">Empresa</label><input className="input" {...input('company')} /></div><div className="hidden" aria-hidden="true"><label>Website</label><input tabIndex="-1" autoComplete="off" {...input('website')} /></div><div className="sm:col-span-2"><label className="label">Mensaje *</label><textarea className="input" rows="6" required maxLength="2000" {...input('message')} /></div></div>{error && <p className="mt-3 rounded-xl bg-red-50 p-3 text-sm font-medium text-red-700">{error}</p>}<button className="btn-primary mt-6 w-full sm:w-auto" disabled={status === 'loading'}>{status === 'loading' ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}Enviar mensaje</button></form>}</motion.section></main><footer className="border-t border-white/10 px-5 py-4 text-center text-xs text-slate-500">Proyecto universitario no oficial · Sin afiliación con Scotiabank Perú</footer></div>
+}
