@@ -64,7 +64,9 @@ export class SupabaseRepository {
     const response = await axios.post(`${SUPABASE_URL}/rest/v1/rpc/submit_contact`, {
       p_name: payload.name, p_email: payload.email, p_company: payload.company || null, p_message: payload.message,
     }, {
-      headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
+      // Publishable keys identify the public client through `apikey`.
+      // Authenticated Supabase SDK calls add the user's JWT separately.
+      headers: { apikey: SUPABASE_ANON_KEY },
     })
     return response.data
   }

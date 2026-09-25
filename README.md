@@ -110,6 +110,44 @@ Los cambios persisten en el navegador. Para restaurar el dataset, eliminar las c
 
 ## Configuración de Supabase
 
+### Conexión MCP desde VS Code
+
+El MCP permite que Codex inspeccione y administre el proyecto de Supabase desde una sesión de desarrollo. La configuración debe permanecer limitada al proyecto `lswmqqzhcgdwcfkvbkal`.
+
+Desde la terminal integrada de VS Code, ejecutar:
+
+```powershell
+codex mcp add supabase --url "https://mcp.supabase.com/mcp?project_ref=lswmqqzhcgdwcfkvbkal&features=docs%2Caccount%2Cdatabase%2Cdebugging%2Cdevelopment%2Cfunctions%2Cbranching"
+codex mcp login supabase
+codex mcp list
+```
+
+Si el cliente Codex devuelve un error indicando que `docs`, `database` u otra feature no es un OAuth scope válido, autenticar con los scopes equivalentes:
+
+```powershell
+codex mcp login supabase --scopes "projects:read,projects:write,database:read,database:write,analytics:read,edge_functions:read,edge_functions:write"
+```
+
+Tras autenticar, usar **Developer: Reload Window** (`Ctrl + Shift + P`) y abrir una conversación nueva en el panel de Codex. Verificar con este mensaje:
+
+```text
+Usa el MCP de Supabase y lista las tablas del proyecto lswmqqzhcgdwcfkvbkal. No modifiques nada.
+```
+
+El MCP no sustituye las variables de entorno del frontend. Tampoco debe usarse una clave `service_role` en archivos `VITE_*`. El flujo recomendado es:
+
+1. Inspeccionar tablas y migraciones sin escribir.
+2. Aplicar `schema.sql` únicamente después de revisar conflictos.
+3. Crear usuarios en **Authentication > Users**.
+4. Ejecutar `seed.sql` para asignar roles y cargar datos demo.
+5. Configurar `.env` y probar login, CRUD y RLS desde la aplicación.
+
+La instalación opcional de instrucciones especializadas para agentes es:
+
+```powershell
+npx skills add supabase/agent-skills
+```
+
 1. Crear un proyecto en Supabase.
 2. Abrir **SQL Editor** y ejecutar [`supabase/schema.sql`](supabase/schema.sql).
 3. En **Authentication → Providers**, habilitar Email/Password.
@@ -120,7 +158,7 @@ Los cambios persisten en el navegador. Para restaurar el dataset, eliminar las c
 
 ```env
 VITE_DATA_MODE=supabase
-VITE_SUPABASE_URL=https://TU-PROYECTO.supabase.co
+VITE_SUPABASE_URL=https://lswmqqzhcgdwcfkvbkal.supabase.co
 VITE_SUPABASE_ANON_KEY=TU_CLAVE_ANON_PUBLICA
 ```
 
