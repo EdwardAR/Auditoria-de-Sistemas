@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-import { CheckCircle2, ChevronLeft, ChevronRight, Edit3, Filter, Plus, Search, ShieldCheck, Trash2 } from 'lucide-react'
+import { CheckCircle2, ChevronLeft, ChevronRight, Download, Edit3, Filter, Plus, Search, ShieldCheck, Trash2 } from 'lucide-react'
 import { PageHeader } from '../components/PageHeader'
 import { Modal } from '../components/Modal'
 import { EntityForm } from '../components/EntityForm'
@@ -12,6 +12,7 @@ import { useAuth } from '../hooks/useAuth'
 import { useEntity } from '../hooks/useEntity'
 import { useToast } from '../hooks/useToast'
 import { canApprove, canDelete, canEdit } from '../utils/constants'
+import { csvColumnsByEntity, exportCsv } from '../utils/exporters'
 
 const PAGE_SIZE = 6
 
@@ -54,6 +55,10 @@ export function EntityPage({ entity }) {
     try { await remove(deleting.id); show('Registro eliminado; el evento quedó en la bitácora.'); setDeleting(null) }
     catch (deleteError) { show(deleteError.message, 'error') }
   }
+  const downloadFilteredCsv = () => {
+    exportCsv(`${entity}-${new Date().toISOString().slice(0, 10)}.csv`, csvColumnsByEntity[entity], filtered)
+    show(`${filtered.length} registro${filtered.length === 1 ? '' : 's'} exportado${filtered.length === 1 ? '' : 's'} en CSV.`)
+  }
 
   const actions = (row) => (
     <div className="flex justify-end gap-1">
@@ -65,7 +70,7 @@ export function EntityPage({ entity }) {
 
   return (
     <>
-      <PageHeader eyebrow={config.eyebrow} title={config.plural} description={config.description} action={canEdit(user.role) && <button className="btn-primary" onClick={openCreate}><Plus className="h-4 w-4" />{config.newLabel}</button>} />
+      <PageHeader eyebrow={config.eyebrow} title={config.plural} description={config.description} action={<div className="flex flex-wrap gap-2"><button className="btn-secondary" onClick={downloadFilteredCsv} disabled={loading || filtered.length === 0}><Download className="h-4 w-4" />Exportar CSV</button>{canEdit(user.role) && <button className="btn-primary" onClick={openCreate}><Plus className="h-4 w-4" />{config.newLabel}</button>}</div>} />
       <motion.section initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="card overflow-hidden">
         <div className="flex flex-col gap-3 border-b p-4 sm:flex-row sm:items-center">
           <div className="relative flex-1"><Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" /><input className="input pl-9" value={query} onChange={(event) => { setQuery(event.target.value); setPage(1) }} placeholder={`Buscar ${config.plural.toLowerCase()}…`} /></div>

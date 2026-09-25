@@ -10,6 +10,8 @@ Aplicación web académica para gestionar auditorías, riesgos tecnológicos, co
 - Flujo formal de aprobación con decisión, observación, aprobador y fecha.
 - Matriz automática de riesgos 5×5 y cumplimiento de controles de 0 a 100%.
 - Dashboard ejecutivo y seis gráficos analíticos construidos con datos reales.
+- Marca académica con el logotipo aportado por el usuario, favicon de isotipo y leyenda permanente de uso no oficial.
+- Modo presentación a pantalla completa, informe ejecutivo PDF y exportación CSV de los registros filtrados.
 - Históricos mensuales de controles y evolución de riesgos.
 - Bitácora inmutable de operaciones generada por triggers de PostgreSQL.
 - Formulario público de contacto sin permiso de lectura pública.
@@ -42,6 +44,7 @@ La UI consume un único contrato de repositorio. Cambiar entre demo y Supabase n
 - Lucide React
 - Supabase Auth, PostgreSQL y Row Level Security
 - Vitest y Testing Library
+- jsPDF y jsPDF-AutoTable para informes generados enteramente en el navegador
 
 ## Estructura
 
@@ -228,6 +231,14 @@ La base de datos recalcula el valor para impedir inconsistencias originadas por 
 6. Bitácora inmutable y página de Seguridad de la Información.
 7. Navegación móvil.
 8. Políticas RLS visibles en Supabase Dashboard.
+9. Dashboard en modo presentación e informe ejecutivo PDF descargado.
+10. Exportación CSV con filtros activos en una gestión operativa.
+
+## Presentación y exportación
+
+Desde el **Dashboard ejecutivo**, el botón **Presentar** abre una vista limpia y solicita pantalla completa cuando el navegador lo permite. Puede salir con **Esc** o con el botón visible. **Informe PDF** produce un reporte local con fecha de emisión, responsable, seis KPIs, distribución de auditorías y un resumen de riesgos, controles e incidentes.
+
+Cada módulo operativo incluye **Exportar CSV**. El archivo refleja la búsqueda y el filtro que estén activos, no solo la página visible. No se envían datos a un servicio externo: tanto el CSV como el PDF se generan en el navegador.
 
 ## Buenas prácticas para un despliegue real
 
