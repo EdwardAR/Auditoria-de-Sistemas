@@ -78,6 +78,8 @@ npm run dev
 
 Abrir `http://localhost:5173`. La configuración inicial usa el modo demo.
 
+> En Windows PowerShell, si la política de ejecución bloquea `npm.ps1`, usa `npm.cmd install`, `npm.cmd run dev` y `npm.cmd run build`. `npx.cmd run dev` no es equivalente: `npx` ejecuta paquetes, no scripts de npm.
+
 Comandos disponibles:
 
 ```bash
@@ -110,6 +112,27 @@ La pantalla de acceso ofrece botones rápidos. También se puede ingresar manual
 Los cambios persisten en el navegador. Para restaurar el dataset, eliminar las claves `audit360_demo_database_v1` y `audit360_demo_session_v1` del almacenamiento local.
 
 > Las credenciales demo solo existen en el adaptador local y nunca deben reutilizarse en un ambiente real.
+
+### ¿Qué hace cada rol?
+
+Los roles representan responsabilidades distintas dentro del ciclo de auditoría. El menú y las acciones disponibles se ajustan automáticamente después de iniciar sesión.
+
+| Rol | Responsabilidad | Puede hacer | No puede hacer |
+|---|---|---|---|
+| **Administrador** | Administra la plataforma y supervisa todo el proceso. | Crear, consultar, editar y eliminar auditorías, riesgos, controles e incidentes; aprobar o rechazar registros; consultar la bitácora. | No tiene restricciones funcionales en el modo demo. |
+| **Auditor** | Ejecuta revisiones y documenta evidencias. | Consultar registros; crear auditorías, riesgos, controles e incidentes; editar información operativa; exportar CSV. | Eliminar registros, aprobar/rechazar o consultar la bitácora restringida. |
+| **Supervisor** | Revisa resultados y toma decisiones de aprobación. | Consultar todos los registros; aprobar o rechazar registros con observaciones; consultar la bitácora. | Crear, editar o eliminar información operativa. |
+| **Consulta** | Consulta ejecutiva y seguimiento. | Ver dashboards, analítica, auditorías, riesgos, controles, incidentes y exportar la información visible. | Crear, editar, eliminar, aprobar/rechazar o consultar contactos y bitácora restringida. |
+
+### Flujo recomendado para la demostración
+
+1. Ingresa como **Auditor** y crea o edita un riesgo. El nivel se calcula automáticamente con probabilidad × impacto y la aprobación queda en `Pendiente`.
+2. Cierra sesión e ingresa como **Supervisor**. Revisa el registro, agrega una observación y apruébalo o recházalo.
+3. Regresa como **Auditor** y muestra que editar un registro aprobado reinicia su aprobación a `Pendiente`.
+4. Ingresa como **Administrador** para mostrar eliminación, bitácora y control total.
+5. Finalmente, ingresa como **Consulta** para demostrar que los botones de modificación y aprobación no aparecen.
+
+En modo demo, estos permisos se validan en `DemoRepository`. En modo Supabase, las mismas reglas se refuerzan mediante funciones, privilegios de columnas y Row Level Security (RLS), por lo que ocultar un botón no es la única barrera de seguridad.
 
 ## Configuración de Supabase
 
