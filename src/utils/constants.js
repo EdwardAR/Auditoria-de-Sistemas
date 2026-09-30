@@ -11,6 +11,8 @@ export const ENTITY_TABLES = {
   risks: 'risks',
   controls: 'controls',
   incidents: 'security_incidents',
+  findings: 'findings',
+  action_plans: 'action_plans',
 }
 
 export const ENTITY_LABELS = {
@@ -18,6 +20,8 @@ export const ENTITY_LABELS = {
   risks: 'riesgo',
   controls: 'control',
   incidents: 'incidente',
+  findings: 'hallazgo',
+  action_plans: 'plan de acción',
 }
 
 export const canEdit = (role) => ['Administrador', 'Auditor'].includes(role)

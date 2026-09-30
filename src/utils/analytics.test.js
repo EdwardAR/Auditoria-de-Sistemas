@@ -17,5 +17,8 @@ describe('buildAnalytics', () => {
     expect(result.kpis).toMatchObject({ totalAudits: 2, pendingAudits: 1, finishedAudits: 1, criticalRisks: 1 })
     expect(result.monthlyCompliance[0].value).toBe(90)
     expect(result.riskEvolution[0].critical).toBe(1)
+    expect(result.riskMatrix).toHaveLength(1)
+    expect(result.kpis.lowComplianceControls).toBe(0)
+    expect(result.kpis.openIncidents).toBe(1)
   })
 })

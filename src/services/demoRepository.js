@@ -109,6 +109,8 @@ export class DemoRepository {
       risks: db.risks,
       controls: db.controls,
       incidents: db.security_incidents,
+      findings: db.findings,
+      actionPlans: db.action_plans,
       controlAssessments: db.control_assessments,
       riskHistory: db.risk_history,
     }

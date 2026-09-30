@@ -28,6 +28,8 @@ export default function App() {
         <Route path="risks" element={<EntityPage entity="risks" />} />
         <Route path="controls" element={<EntityPage entity="controls" />} />
         <Route path="incidents" element={<EntityPage entity="incidents" />} />
+        <Route path="findings" element={<EntityPage entity="findings" />} />
+        <Route path="action-plans" element={<EntityPage entity="action_plans" />} />
         <Route path="analytics" element={<AnalyticsPage />} />
         <Route path="information-security" element={<SecurityPage />} />
         <Route path="profile" element={<ProfilePage />} />

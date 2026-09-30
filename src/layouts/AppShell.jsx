@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
-  Activity, BarChart3, BookOpenCheck, ChevronRight, ClipboardCheck, FileSearch,
-  LayoutDashboard, LogOut, Menu, ShieldAlert, ShieldCheck, UserCircle, X,
+  Activity, BarChart3, BookOpenCheck, ChevronRight, ClipboardCheck, ClipboardList, FileSearch,
+  LayoutDashboard, ListChecks, LogOut, Menu, ShieldAlert, ShieldCheck, UserCircle, X,
 } from 'lucide-react'
 import { Brand } from '../components/Brand'
 import { useAuth } from '../hooks/useAuth'
@@ -16,6 +16,8 @@ const navItems = [
   { to: '/risks', label: 'Riesgos tecnológicos', icon: ShieldAlert },
   { to: '/controls', label: 'Controles internos', icon: ClipboardCheck },
   { to: '/incidents', label: 'Incidentes', icon: Activity },
+  { to: '/findings', label: 'Hallazgos', icon: ClipboardList },
+  { to: '/action-plans', label: 'Planes de acción', icon: ListChecks },
   { to: '/analytics', label: 'Dashboard analítico', icon: BarChart3 },
   { to: '/information-security', label: 'Seguridad de la información', icon: ShieldCheck },
   { to: '/profile', label: 'Mi perfil', icon: UserCircle },
@@ -24,7 +26,7 @@ const navItems = [
 const titles = {
   dashboard: 'Dashboard ejecutivo', audits: 'Gestión de auditorías', risks: 'Riesgos tecnológicos',
   controls: 'Controles internos', incidents: 'Incidentes de seguridad', analytics: 'Análisis y tendencias',
-  'information-security': 'Seguridad de la información', profile: 'Perfil de usuario', activity: 'Bitácora de actividad',
+  'information-security': 'Seguridad de la información', profile: 'Perfil de usuario', activity: 'Bitácora de actividad', findings: 'Hallazgos de auditoría', 'action-plans': 'Planes de acción',
 }
 
 function SidebarContent({ onNavigate }) {
@@ -68,7 +70,7 @@ export function AppShell() {
           <div className="flex items-center gap-2 rounded-full border bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-sm"><span className="h-2 w-2 rounded-full bg-emerald-500" /> Sistema operativo</div>
         </header>
         <main className="mx-auto min-h-[calc(100vh-112px)] max-w-[1600px] p-4 sm:p-6 lg:p-8"><Outlet /></main>
-        <footer className="border-t border-slate-200/80 bg-white/70 px-6 py-3 text-center text-[11px] font-medium text-slate-500">Proyecto universitario no oficial · Sin afiliación ni representación institucional de Scotiabank Perú</footer>
+        <footer className="border-t border-slate-200/80 bg-white/70 px-6 py-3 text-center text-[11px] font-medium text-slate-500">Auditoria de Sistemas</footer>
       </div>
     </div>
   )

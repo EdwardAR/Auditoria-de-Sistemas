@@ -12,6 +12,10 @@ Aplicación web académica para gestionar auditorías, riesgos tecnológicos, co
 - Dashboard ejecutivo y seis gráficos analíticos construidos con datos reales.
 - Marca académica con el logotipo aportado por el usuario, favicon de isotipo y leyenda permanente de uso no oficial.
 - Modo presentación a pantalla completa, informe ejecutivo PDF y exportación CSV de los registros filtrados.
+- Matriz de riesgos 5×5 interactiva con detalle por celda y puntuación probabilidad × impacto.
+- Lectura ejecutiva de auditorías vencidas, controles bajo objetivo, incidentes abiertos y riesgos en tratamiento.
+- Flujo visual de gobierno: identificar → evaluar → tratar → aprobar → monitorear.
+- Módulos de hallazgos y planes de acción para conectar observaciones con responsables, fechas y avance de remediación.
 - Históricos mensuales de controles y evolución de riesgos.
 - Bitácora inmutable de operaciones generada por triggers de PostgreSQL.
 - Formulario público de contacto sin permiso de lectura pública.
@@ -164,9 +168,10 @@ El MCP no sustituye las variables de entorno del frontend. Tampoco debe usarse u
 
 1. Inspeccionar tablas y migraciones sin escribir.
 2. Aplicar `schema.sql` únicamente después de revisar conflictos.
-3. Crear usuarios en **Authentication > Users**.
-4. Ejecutar `seed.sql` para asignar roles y cargar datos demo.
-5. Configurar `.env` y probar login, CRUD y RLS desde la aplicación.
+3. Confirmar que el esquema incluya las tablas `findings` y `action_plans` para el seguimiento de remediación.
+4. Crear usuarios en **Authentication > Users**.
+5. Ejecutar `seed.sql` para asignar roles y cargar datos demo.
+6. Configurar `.env` y probar login, CRUD y RLS desde la aplicación.
 
 La instalación opcional de instrucciones especializadas para agentes es:
 

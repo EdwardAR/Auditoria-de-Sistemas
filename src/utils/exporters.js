@@ -52,6 +52,18 @@ export const csvColumnsByEntity = {
     { label: 'Fecha', value: (row) => formatDate(row.incident_date) }, { label: 'Estado', value: (row) => row.status },
     { label: 'Descripción', value: (row) => row.description }, { label: 'Aprobación', value: (row) => row.approval_status },
   ],
+  findings: [
+    { label: 'Hallazgo', value: (row) => row.title }, { label: 'Auditoría relacionada', value: (row) => row.audit_title },
+    { label: 'Severidad', value: (row) => row.severity }, { label: 'Responsable', value: (row) => row.owner },
+    { label: 'Fecha límite', value: (row) => formatDate(row.due_date) }, { label: 'Estado', value: (row) => row.status },
+    { label: 'Recomendación', value: (row) => row.recommendation }, { label: 'Aprobación', value: (row) => row.approval_status },
+  ],
+  action_plans: [
+    { label: 'Acción correctiva', value: (row) => row.title }, { label: 'Hallazgo relacionado', value: (row) => row.finding_title },
+    { label: 'Responsable', value: (row) => row.responsible }, { label: 'Avance (%)', value: (row) => row.progress },
+    { label: 'Fecha límite', value: (row) => formatDate(row.due_date) }, { label: 'Estado', value: (row) => row.status },
+    { label: 'Comentarios', value: (row) => row.comments }, { label: 'Aprobación', value: (row) => row.approval_status },
+  ],
 }
 
 export function buildExecutiveReport({ analytics, data, user }) {

@@ -1,6 +1,7 @@
 const countBy = (rows, key) => Object.entries(rows.reduce((acc, row) => ({ ...acc, [row[key] || 'Sin dato']: (acc[row[key] || 'Sin dato'] || 0) + 1 }), {})).map(([name, value]) => ({ name, value }))
+const riskCellKey = (probability, impact) => `${Number(probability)}-${Number(impact)}`
 
-export function buildAnalytics(data) {
+export function buildAnalytics(data, referenceDate = new Date()) {
   const audits = data?.audits || []
   const risks = data?.risks || []
   const controls = data?.controls || []
@@ -25,6 +26,18 @@ export function buildAnalytics(data) {
     if (row.level === 'Crítico') acc[month].critical += 1
     return acc
   }, {})).sort((a, b) => a.month.localeCompare(b.month))
+  const today = new Date(referenceDate)
+  today.setHours(0, 0, 0, 0)
+  const overdueAudits = audits.filter((row) => row.end_date && new Date(`${row.end_date}T23:59:59`) < today && !['Completada', 'Cerrada'].includes(row.status))
+  const lowComplianceControls = controls.filter((row) => Number(row.compliance) < 70)
+  const openIncidents = incidents.filter((row) => !['Resuelto', 'Cerrado'].includes(row.status))
+  const inTreatmentRisks = risks.filter((row) => row.status === 'En Tratamiento')
+  const riskMatrix = Object.values(risks.reduce((acc, row) => {
+    const key = riskCellKey(row.probability, row.impact)
+    if (!acc[key]) acc[key] = { key, probability: Number(row.probability), impact: Number(row.impact), risks: [] }
+    acc[key].risks.push(row)
+    return acc
+  }, {}))
 
   return {
     kpis: {
@@ -34,6 +47,10 @@ export function buildAnalytics(data) {
       criticalRisks: risks.filter((row) => row.level === 'Crítico').length,
       evaluatedControls: controls.length,
       securityIncidents: incidents.length,
+      overdueAudits: overdueAudits.length,
+      lowComplianceControls: lowComplianceControls.length,
+      openIncidents: openIncidents.length,
+      inTreatmentRisks: inTreatmentRisks.length,
     },
     risksByCategory: countBy(risks, 'category'),
     risksByLevel: countBy(risks, 'level'),
@@ -41,5 +58,7 @@ export function buildAnalytics(data) {
     incidentsBySeverity: countBy(incidents, 'severity'),
     monthlyCompliance: groupMonths(assessments, 'assessment_month', 'compliance'),
     riskEvolution,
+    riskMatrix,
+    priorities: { overdueAudits, lowComplianceControls, openIncidents, inTreatmentRisks },
   }
 }

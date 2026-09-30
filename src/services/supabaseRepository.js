@@ -42,16 +42,18 @@ export class SupabaseRepository {
   }
 
   async getDashboardData() {
-    const [audits, risks, controls, incidents, controlAssessments, riskHistory] = await Promise.all([
+    const [audits, risks, controls, incidents, findings, actionPlans, controlAssessments, riskHistory] = await Promise.all([
       supabase.from('audits').select('*'),
       supabase.from('risks').select('*'),
       supabase.from('controls').select('*'),
       supabase.from('security_incidents').select('*'),
+      supabase.from('findings').select('*'),
+      supabase.from('action_plans').select('*'),
       supabase.from('control_assessments').select('*'),
       supabase.from('risk_history').select('*'),
     ])
     return {
-      audits: ensure(audits), risks: ensure(risks), controls: ensure(controls), incidents: ensure(incidents),
+      audits: ensure(audits), risks: ensure(risks), controls: ensure(controls), incidents: ensure(incidents), findings: ensure(findings), actionPlans: ensure(actionPlans),
       controlAssessments: ensure(controlAssessments), riskHistory: ensure(riskHistory),
     }
   }

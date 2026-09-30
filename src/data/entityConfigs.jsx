@@ -1,4 +1,4 @@
-import { Activity, ClipboardCheck, FileSearch, ShieldAlert } from 'lucide-react'
+import { Activity, ClipboardCheck, ClipboardList, FileSearch, ListChecks, ShieldAlert } from 'lucide-react'
 import { Badge } from '../components/Badge'
 import { AUDIT_STATUSES, INCIDENT_STATUSES, RISK_STATUSES, SEVERITIES } from '../utils/constants'
 import { formatDate } from '../utils/formatters'
@@ -76,6 +76,49 @@ export const entityConfigs = {
       { key: 'incident_type', label: 'Incidente', render: (row) => <div><p className="max-w-xs font-semibold text-slate-800">{row.incident_type}</p><p className="mt-1 max-w-xs truncate text-xs text-slate-500">{row.description}</p></div> },
       { key: 'incident_date', label: 'Fecha', render: (row) => formatDate(row.incident_date) },
       { key: 'severity', label: 'Severidad', render: (row) => <Badge>{row.severity}</Badge> },
+      { key: 'status', label: 'Estado', render: (row) => <Badge>{row.status}</Badge> }, approvalColumn,
+    ],
+  },
+  findings: {
+    singular: 'hallazgo', newLabel: 'Nuevo hallazgo', plural: 'Hallazgos de auditoría', eyebrow: 'Resultados de auditoría', icon: ClipboardList,
+    description: 'Documenta brechas, evidencias y recomendaciones derivadas de cada revisión tecnológica.',
+    searchKeys: ['title', 'description', 'audit_title', 'owner'], filterKey: 'status', filterOptions: ['Abierto', 'En remediación', 'Verificado', 'Cerrado'],
+    fields: [
+      { name: 'title', label: 'Título del hallazgo', required: true, span: 2 },
+      { name: 'audit_title', label: 'Auditoría relacionada', required: true, placeholder: 'Ej. Auditoría de accesos privilegiados' },
+      { name: 'severity', label: 'Severidad', type: 'select', options: ['Baja', 'Media', 'Alta', 'Crítica'], required: true },
+      { name: 'status', label: 'Estado', type: 'select', options: ['Abierto', 'En remediación', 'Verificado', 'Cerrado'], required: true },
+      { name: 'owner', label: 'Responsable', required: true },
+      { name: 'due_date', label: 'Fecha límite', type: 'date', required: true },
+      { name: 'description', label: 'Descripción y evidencia', type: 'textarea', required: true, span: 2 },
+      { name: 'recommendation', label: 'Recomendación', type: 'textarea', required: true, span: 2 },
+    ],
+    columns: [
+      { key: 'title', label: 'Hallazgo', render: (row) => <div><p className="max-w-xs font-semibold text-slate-800">{row.title}</p><p className="mt-1 max-w-xs truncate text-xs text-slate-500">{row.audit_title}</p></div> },
+      { key: 'severity', label: 'Severidad', render: (row) => <Badge>{row.severity}</Badge> },
+      { key: 'owner', label: 'Responsable' },
+      { key: 'due_date', label: 'Fecha límite', render: (row) => formatDate(row.due_date) },
+      { key: 'status', label: 'Estado', render: (row) => <Badge>{row.status}</Badge> }, approvalColumn,
+    ],
+  },
+  action_plans: {
+    singular: 'plan de acción', newLabel: 'Nuevo plan de acción', plural: 'Planes de acción', eyebrow: 'Remediación', icon: ListChecks,
+    description: 'Convierte los hallazgos en tareas medibles con responsables, fechas y progreso verificable.',
+    searchKeys: ['title', 'finding_title', 'responsible'], filterKey: 'status', filterOptions: ['Pendiente', 'En progreso', 'Vencido', 'Completado'],
+    fields: [
+      { name: 'title', label: 'Acción correctiva', required: true, span: 2 },
+      { name: 'finding_title', label: 'Hallazgo relacionado', required: true },
+      { name: 'responsible', label: 'Responsable', required: true },
+      { name: 'due_date', label: 'Fecha límite', type: 'date', required: true },
+      { name: 'progress', label: 'Avance (%)', type: 'number', min: 0, max: 100, required: true },
+      { name: 'status', label: 'Estado', type: 'select', options: ['Pendiente', 'En progreso', 'Vencido', 'Completado'], required: true },
+      { name: 'comments', label: 'Comentarios de seguimiento', type: 'textarea', span: 2 },
+    ],
+    columns: [
+      { key: 'title', label: 'Acción', render: (row) => <div><p className="max-w-xs font-semibold text-slate-800">{row.title}</p><p className="mt-1 max-w-xs truncate text-xs text-slate-500">{row.finding_title}</p></div> },
+      { key: 'responsible', label: 'Responsable' },
+      { key: 'progress', label: 'Avance', render: (row) => <div className="min-w-32"><div className="mb-1 flex justify-between text-xs font-semibold"><span>{row.progress}%</span></div><div className="h-2 overflow-hidden rounded-full bg-slate-100"><div className={`h-full rounded-full ${row.progress >= 80 ? 'bg-emerald-500' : row.progress >= 40 ? 'bg-amber-500' : 'bg-brand-500'}`} style={{ width: `${row.progress}%` }} /></div></div> },
+      { key: 'due_date', label: 'Fecha límite', render: (row) => formatDate(row.due_date) },
       { key: 'status', label: 'Estado', render: (row) => <Badge>{row.status}</Badge> }, approvalColumn,
     ],
   },

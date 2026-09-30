@@ -90,6 +90,45 @@ create table if not exists public.security_incidents (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.findings (
+  id uuid primary key default gen_random_uuid(),
+  title text not null check (char_length(title) between 3 and 180),
+  audit_title text not null,
+  severity text not null check (severity in ('Baja', 'Media', 'Alta', 'CrÃ­tica')),
+  status text not null check (status in ('Abierto', 'En remediaciÃ³n', 'Verificado', 'Cerrado')),
+  owner text not null,
+  due_date date not null,
+  description text not null,
+  recommendation text not null,
+  approval_status public.approval_state not null default 'Pendiente',
+  approval_notes text,
+  approved_by uuid references public.profiles(id) on delete set null,
+  approved_at timestamptz,
+  created_by uuid references public.profiles(id) on delete set null default auth.uid(),
+  updated_by uuid references public.profiles(id) on delete set null default auth.uid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists public.action_plans (
+  id uuid primary key default gen_random_uuid(),
+  title text not null check (char_length(title) between 3 and 180),
+  finding_title text not null,
+  responsible text not null,
+  due_date date not null,
+  progress numeric(5,2) not null default 0 check (progress between 0 and 100),
+  status text not null check (status in ('Pendiente', 'En progreso', 'Vencido', 'Completado')),
+  comments text,
+  approval_status public.approval_state not null default 'Pendiente',
+  approval_notes text,
+  approved_by uuid references public.profiles(id) on delete set null,
+  approved_at timestamptz,
+  created_by uuid references public.profiles(id) on delete set null default auth.uid(),
+  updated_by uuid references public.profiles(id) on delete set null default auth.uid(),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 create table if not exists public.contacts (
   id uuid primary key default gen_random_uuid(),
   name text not null check (char_length(name) between 2 and 100),
@@ -137,6 +176,8 @@ create table if not exists public.audit_events (
 create index if not exists idx_audits_status on public.audits(status);
 create index if not exists idx_risks_level on public.risks(level);
 create index if not exists idx_incidents_severity on public.security_incidents(severity);
+create index if not exists idx_findings_status on public.findings(status);
+create index if not exists idx_action_plans_status on public.action_plans(status);
 create index if not exists idx_control_assessments_month on public.control_assessments(assessment_month);
 create index if not exists idx_risk_history_changed_at on public.risk_history(changed_at);
 create index if not exists idx_audit_events_created_at on public.audit_events(created_at desc);
@@ -190,7 +231,7 @@ end;
 $$;
 
 do $$ declare table_name text; begin
-  foreach table_name in array array['audits','risks','controls','security_incidents'] loop
+  foreach table_name in array array['audits','risks','controls','security_incidents','findings','action_plans'] loop
     execute format('drop trigger if exists maintain_metadata on public.%I', table_name);
     execute format('create trigger maintain_metadata before update on public.%I for each row execute function public.maintain_record_metadata()', table_name);
   end loop;
@@ -246,7 +287,7 @@ end;
 $$;
 
 do $$ declare table_name text; begin
-  foreach table_name in array array['audits','risks','controls','security_incidents'] loop
+  foreach table_name in array array['audits','risks','controls','security_incidents','findings','action_plans'] loop
     execute format('drop trigger if exists audit_event_trigger on public.%I', table_name);
     execute format('create trigger audit_event_trigger after insert or update or delete on public.%I for each row execute function public.capture_audit_event()', table_name);
   end loop;
@@ -264,6 +305,8 @@ begin
     when 'risks' then update public.risks set approval_status=p_decision, approval_notes=p_notes, approved_by=auth.uid(), approved_at=now() where id=p_record_id returning to_jsonb(risks.*) into result;
     when 'controls' then update public.controls set approval_status=p_decision, approval_notes=p_notes, approved_by=auth.uid(), approved_at=now() where id=p_record_id returning to_jsonb(controls.*) into result;
     when 'security_incidents' then update public.security_incidents set approval_status=p_decision, approval_notes=p_notes, approved_by=auth.uid(), approved_at=now() where id=p_record_id returning to_jsonb(security_incidents.*) into result;
+    when 'findings' then update public.findings set approval_status=p_decision, approval_notes=p_notes, approved_by=auth.uid(), approved_at=now() where id=p_record_id returning to_jsonb(findings.*) into result;
+    when 'action_plans' then update public.action_plans set approval_status=p_decision, approval_notes=p_notes, approved_by=auth.uid(), approved_at=now() where id=p_record_id returning to_jsonb(action_plans.*) into result;
     else raise exception 'Entidad no permitida';
   end case;
   if result is null then raise exception 'Registro no encontrado'; end if;
@@ -297,6 +340,8 @@ alter table public.audits enable row level security;
 alter table public.risks enable row level security;
 alter table public.controls enable row level security;
 alter table public.security_incidents enable row level security;
+alter table public.findings enable row level security;
+alter table public.action_plans enable row level security;
 alter table public.contacts enable row level security;
 alter table public.control_assessments enable row level security;
 alter table public.risk_history enable row level security;
@@ -306,7 +351,7 @@ drop policy if exists profiles_read_authenticated on public.profiles;
 create policy profiles_read_authenticated on public.profiles for select to authenticated using (true);
 
 do $$ declare table_name text; begin
-  foreach table_name in array array['audits','risks','controls','security_incidents'] loop
+  foreach table_name in array array['audits','risks','controls','security_incidents','findings','action_plans'] loop
     execute format('drop policy if exists %I on public.%I', table_name || '_read', table_name);
     execute format('create policy %I on public.%I for select to authenticated using (true)', table_name || '_read', table_name);
     execute format('drop policy if exists %I on public.%I', table_name || '_insert', table_name);
@@ -330,14 +375,16 @@ drop policy if exists contacts_admin_delete on public.contacts;
 create policy contacts_admin_delete on public.contacts for delete to authenticated using (public.current_user_role() = 'Administrador');
 
 revoke all on all tables in schema public from anon, authenticated;
-grant select on public.profiles, public.audits, public.risks, public.controls, public.security_incidents, public.control_assessments, public.risk_history, public.audit_events to authenticated;
+grant select on public.profiles, public.audits, public.risks, public.controls, public.security_incidents, public.findings, public.action_plans, public.control_assessments, public.risk_history, public.audit_events to authenticated;
 grant select, delete on public.contacts to authenticated;
-grant insert on public.audits, public.risks, public.controls, public.security_incidents to authenticated;
+grant insert on public.audits, public.risks, public.controls, public.security_incidents, public.findings, public.action_plans to authenticated;
 grant update(title,description,owner,status,start_date,end_date,observations,updated_by) on public.audits to authenticated;
 grant update(name,category,probability,impact,status,updated_by) on public.risks to authenticated;
 grant update(name,process,responsible,compliance,observations,updated_by) on public.controls to authenticated;
 grant update(incident_type,severity,description,incident_date,status,updated_by) on public.security_incidents to authenticated;
-grant delete on public.audits, public.risks, public.controls, public.security_incidents to authenticated;
+grant update(title,audit_title,severity,status,owner,due_date,description,recommendation,updated_by) on public.findings to authenticated;
+grant update(title,finding_title,responsible,due_date,progress,status,comments,updated_by) on public.action_plans to authenticated;
+grant delete on public.audits, public.risks, public.controls, public.security_incidents, public.findings, public.action_plans to authenticated;
 grant usage, select on all sequences in schema public to authenticated;
 grant execute on function public.current_user_role() to authenticated;
 grant execute on function public.review_record(text,uuid,public.approval_state,text) to authenticated;
