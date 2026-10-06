@@ -12,11 +12,43 @@
 
 @layer components {
   .card { @apply rounded-2xl border border-white/80 bg-white/90 shadow-card backdrop-blur-xl; }
-  .input { @apply w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-800 shadow-sm transition placeholder:text-slate-400 hover:border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15; }
+  .input {
+    @apply w-full rounded-xl border border-slate-200 bg-white/90 px-3.5 py-2.5 text-sm text-slate-800 shadow-sm transition placeholder:text-slate-400 hover:border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+  }
   .label { @apply mb-1.5 block text-sm font-semibold text-slate-700; }
-  .btn-primary { @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand-500 px-4 py-2.5 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50; }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand-500 px-4 py-2.5 text-sm font-semibold text-white shadow-glow transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50;
+    box-shadow: 0 16px 40px rgba(234, 45, 58, 0.28);
+  }
   .btn-secondary { @apply inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50; }
   .icon-btn { @apply inline-flex h-9 w-9 items-center justify-center rounded-xl text-slate-500 transition hover:bg-slate-100 hover:text-slate-800; }
+
+  .ambient-grid {
+    background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: radial-gradient(circle at center, black 45%, transparent 100%);
+  }
+
+  .ambient-radial {
+    background: radial-gradient(circle at 30% 20%, rgba(239, 68, 68, 0.32), transparent 28%),
+      radial-gradient(circle at 80% 75%, rgba(168, 85, 247, 0.28), transparent 30%),
+      radial-gradient(circle at 50% 55%, rgba(255,255,255,0.08), transparent 45%);
+    animation: slowPulse 10s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes slowPulse {
+  0% {
+    transform: scale(1) translate3d(0, 0, 0);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.08) translate3d(12px, -10px, 0);
+    opacity: 1;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
