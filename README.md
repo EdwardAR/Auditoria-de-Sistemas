@@ -1,5 +1,7 @@
 # Auditoría 360 — Sistema de Auditoría Tecnológica
 
+> **Alcance local:** el modo demo conserva datos en `localStorage` y archivos de evidencia en IndexedDB. Sirve para validación funcional y académica; no ofrece autenticación real, cifrado administrado, almacenamiento centralizado ni bitácora inmutable de producción.
+
 Aplicación web académica para gestionar auditorías, riesgos tecnológicos, controles internos, incidentes de seguridad y métricas de cumplimiento. La experiencia visual toma como referencia el lenguaje corporativo de Scotiabank Perú, pero **no es un producto oficial ni mantiene afiliación con la entidad**.
 
 ## Capacidades principales

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
-  Activity, BarChart3, BookOpenCheck, ChevronRight, ClipboardCheck, ClipboardList, FileSearch,
+  Activity, BarChart3, BookOpenCheck, ChevronRight, ClipboardCheck, ClipboardList, FileSearch, ReceiptText,
   LayoutDashboard, ListChecks, LogOut, Menu, ShieldAlert, ShieldCheck, UserCircle, X,
 } from 'lucide-react'
 import { Brand } from '../components/Brand'
@@ -18,6 +18,7 @@ const navItems = [
   { to: '/incidents', label: 'Incidentes', icon: Activity },
   { to: '/findings', label: 'Hallazgos', icon: ClipboardList },
   { to: '/action-plans', label: 'Planes de acción', icon: ListChecks },
+  { to: '/negotiable-invoices', label: 'Facturas negociables', icon: ReceiptText },
   { to: '/analytics', label: 'Dashboard analítico', icon: BarChart3 },
   { to: '/information-security', label: 'Seguridad de la información', icon: ShieldCheck },
   { to: '/profile', label: 'Mi perfil', icon: UserCircle },
@@ -27,6 +28,7 @@ const titles = {
   dashboard: 'Dashboard ejecutivo', audits: 'Gestión de auditorías', risks: 'Riesgos tecnológicos',
   controls: 'Controles internos', incidents: 'Incidentes de seguridad', analytics: 'Análisis y tendencias',
   'information-security': 'Seguridad de la información', profile: 'Perfil de usuario', activity: 'Bitácora de actividad', findings: 'Hallazgos de auditoría', 'action-plans': 'Planes de acción',
+  'negotiable-invoices': 'Facturas negociables',
 }
 
 function SidebarContent({ onNavigate }) {

@@ -13,6 +13,7 @@ describe('buildAnalytics', () => {
         { assessment_month: '2026-09-01', compliance: 100 },
       ],
       riskHistory: [{ changed_at: '2026-09-10', level: 'Crítico' }],
+      invoices: [{ status: 'Observada', current_stage: 'Validación', due_date: '2026-01-01' }, { status: 'Cerrada', current_stage: 'Cierre', due_date: '2026-01-01' }],
     })
     expect(result.kpis).toMatchObject({ totalAudits: 2, pendingAudits: 1, finishedAudits: 1, criticalRisks: 1 })
     expect(result.monthlyCompliance[0].value).toBe(90)
@@ -20,5 +21,6 @@ describe('buildAnalytics', () => {
     expect(result.riskMatrix).toHaveLength(1)
     expect(result.kpis.lowComplianceControls).toBe(0)
     expect(result.kpis.openIncidents).toBe(1)
+    expect(result.kpis).toMatchObject({ totalInvoices: 2, activeInvoices: 1, closedInvoices: 1, observedInvoices: 1, overdueInvoices: 1 })
   })
 })

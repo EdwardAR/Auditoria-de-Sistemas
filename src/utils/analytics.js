@@ -8,6 +8,7 @@ export function buildAnalytics(data, referenceDate = new Date()) {
   const incidents = data?.incidents || []
   const assessments = data?.controlAssessments || []
   const history = data?.riskHistory || []
+  const invoices = data?.invoices || []
   const groupMonths = (rows, dateKey, valueKey) => Object.values(rows.reduce((acc, row) => {
     const month = String(row[dateKey] || '').slice(0, 7)
     if (!month) return acc
@@ -38,6 +39,7 @@ export function buildAnalytics(data, referenceDate = new Date()) {
     acc[key].risks.push(row)
     return acc
   }, {}))
+  const overdueInvoices = invoices.filter((row) => row.status !== 'Cerrada' && row.due_date && new Date(`${row.due_date}T23:59:59`) < today)
 
   return {
     kpis: {
@@ -51,6 +53,11 @@ export function buildAnalytics(data, referenceDate = new Date()) {
       lowComplianceControls: lowComplianceControls.length,
       openIncidents: openIncidents.length,
       inTreatmentRisks: inTreatmentRisks.length,
+      totalInvoices: invoices.length,
+      activeInvoices: invoices.filter((row) => row.status !== 'Cerrada').length,
+      closedInvoices: invoices.filter((row) => row.status === 'Cerrada').length,
+      observedInvoices: invoices.filter((row) => row.status === 'Observada').length,
+      overdueInvoices: overdueInvoices.length,
     },
     risksByCategory: countBy(risks, 'category'),
     risksByLevel: countBy(risks, 'level'),
@@ -59,6 +66,7 @@ export function buildAnalytics(data, referenceDate = new Date()) {
     monthlyCompliance: groupMonths(assessments, 'assessment_month', 'compliance'),
     riskEvolution,
     riskMatrix,
+    invoicesByStage: countBy(invoices, 'current_stage'),
     priorities: { overdueAudits, lowComplianceControls, openIncidents, inTreatmentRisks },
   }
 }

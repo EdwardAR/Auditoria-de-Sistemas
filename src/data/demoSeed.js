@@ -3,6 +3,7 @@ export const demoUsers = [
   { id: '10000000-0000-0000-0000-000000000002', full_name: 'Diego Salazar', email: 'auditor@demo.edu', password: 'Demo2026*', role: 'Auditor', last_sign_in_at: '2026-09-24T12:45:00Z' },
   { id: '10000000-0000-0000-0000-000000000003', full_name: 'Lucía Torres', email: 'supervisor@demo.edu', password: 'Demo2026*', role: 'Supervisor', last_sign_in_at: '2026-09-23T18:10:00Z' },
   { id: '10000000-0000-0000-0000-000000000004', full_name: 'Marco Ríos', email: 'consulta@demo.edu', password: 'Demo2026*', role: 'Consulta', last_sign_in_at: '2026-09-22T16:35:00Z' },
+  { id: '10000000-0000-0000-0000-000000000005', full_name: 'Andrea Paredes', email: 'responsable@demo.edu', password: 'Demo2026*', role: 'Responsable del Área', last_sign_in_at: '2026-09-22T15:10:00Z' },
 ]
 
 const audit = (id, title, owner, status, start, end, approval, description) => ({
@@ -64,6 +65,17 @@ export const demoSeed = {
     { id: 2, entity_type: 'risks', entity_id: '30000000-0000-0000-0000-000000000001', action: 'UPDATE', actor_name: 'Diego Salazar', actor_role: 'Auditor', created_at: '2026-09-01T10:30:00Z', details: 'Actualización de probabilidad e impacto.' },
   ],
   contacts: [],
+  negotiable_invoices: [
+    { id: '80000000-0000-0000-0000-000000000001', code: 'FN-2026-001', invoice_number: 'F001-0001842', issuer: 'Servicios Empresariales del Pacífico S.A.C.', buyer: 'Comercial Andina S.A.', currency: 'PEN', amount: 185000, issue_date: '2026-09-01', due_date: '2026-11-30', responsible: 'Diego Salazar', responsible_user_id: demoUsers[1].id, current_stage: 'Verificación', status: 'En proceso', audit_id: '20000000-0000-0000-0000-000000000001', audit_title: 'Auditoría de accesos privilegiados', observations: 'Expediente demostrativo para validar la trazabilidad del proceso.', approval_status: 'Pendiente', approval_notes: null, deleted_at: null, created_by: demoUsers[1].id, updated_by: demoUsers[1].id, created_at: '2026-09-02T14:00:00Z', updated_at: '2026-09-06T16:30:00Z' },
+    { id: '80000000-0000-0000-0000-000000000002', code: 'FN-2026-002', invoice_number: 'E001-0000971', issuer: 'Logística Integral Perú S.A.', buyer: 'Industrias del Sur S.A.C.', currency: 'USD', amount: 74250, issue_date: '2026-08-15', due_date: '2026-10-15', responsible: 'Andrea Paredes', responsible_user_id: demoUsers[4].id, current_stage: 'Seguimiento', status: 'Observada', audit_id: '20000000-0000-0000-0000-000000000003', audit_title: 'Continuidad de servicios críticos', observations: 'Pendiente de subsanar una observación documental.', approval_status: 'Rechazado', approval_notes: 'Adjuntar sustento actualizado del desembolso.', deleted_at: null, created_by: demoUsers[1].id, updated_by: demoUsers[1].id, created_at: '2026-08-16T14:00:00Z', updated_at: '2026-10-16T09:15:00Z' },
+  ],
+  invoice_stage_events: [
+    { id: '81000000-0000-0000-0000-000000000001', invoice_id: '80000000-0000-0000-0000-000000000001', from_stage: null, to_stage: 'Registro', action: 'CREATED', responsible: 'Diego Salazar', comment: 'Expediente registrado.', evidence_ids: [], created_by: demoUsers[1].id, created_at: '2026-09-02T14:00:00Z' },
+    { id: '81000000-0000-0000-0000-000000000002', invoice_id: '80000000-0000-0000-0000-000000000001', from_stage: 'Registro', to_stage: 'Validación', action: 'TRANSITION', responsible: 'Diego Salazar', comment: 'Datos tributarios validados.', evidence_ids: [], created_by: demoUsers[1].id, created_at: '2026-09-04T11:00:00Z' },
+    { id: '81000000-0000-0000-0000-000000000003', invoice_id: '80000000-0000-0000-0000-000000000001', from_stage: 'Validación', to_stage: 'Verificación', action: 'TRANSITION', responsible: 'Diego Salazar', comment: 'Se inicia verificación documental.', evidence_ids: [], created_by: demoUsers[1].id, created_at: '2026-09-06T16:30:00Z' },
+  ],
+  evidence_metadata: [],
+  schema_version: 2,
 }
 
 const months = ['2026-04-01', '2026-05-01', '2026-06-01', '2026-07-01', '2026-08-01', '2026-09-01']

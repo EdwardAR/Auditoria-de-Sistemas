@@ -66,6 +66,36 @@ export const csvColumnsByEntity = {
   ],
 }
 
+export const invoiceCsvColumns = [
+  { label: 'Código', value: (row) => row.code }, { label: 'Número de factura', value: (row) => row.invoice_number },
+  { label: 'Emisor', value: (row) => row.issuer }, { label: 'Adquirente', value: (row) => row.buyer },
+  { label: 'Moneda', value: (row) => row.currency }, { label: 'Importe', value: (row) => row.amount },
+  { label: 'Emisión', value: (row) => formatDate(row.issue_date) }, { label: 'Vencimiento', value: (row) => formatDate(row.due_date) },
+  { label: 'Responsable', value: (row) => row.responsible }, { label: 'Etapa', value: (row) => row.current_stage },
+  { label: 'Estado', value: (row) => row.status }, { label: 'Aprobación', value: (row) => row.approval_status },
+  { label: 'Auditoría', value: (row) => row.audit_title }, { label: 'Observaciones', value: (row) => row.observations },
+]
+
+export function exportInvoicePdf({ invoice, events, evidence }) {
+  const pdf = new jsPDF({ unit: 'mm', format: 'a4' })
+  const red = [236, 17, 26]
+  pdf.setFillColor(...red); pdf.rect(0, 0, 210, 24, 'F'); pdf.setTextColor(255, 255, 255); pdf.setFontSize(17); pdf.text(`Expediente ${invoice.code}`, 14, 15)
+  pdf.setTextColor(31, 41, 55); pdf.setFontSize(9); pdf.text(`Factura: ${invoice.invoice_number} · Emitido: ${formatDate(new Date().toISOString(), true)}`, 14, 31)
+  autoTable(pdf, { startY: 37, head: [['Campo', 'Valor']], body: [
+    ['Emisor', invoice.issuer], ['Adquirente', invoice.buyer], ['Importe', `${invoice.currency} ${normalizeValue(invoice.amount)}`],
+    ['Emisión / vencimiento', `${formatDate(invoice.issue_date)} / ${formatDate(invoice.due_date)}`], ['Responsable', invoice.responsible],
+    ['Etapa / estado', `${invoice.current_stage} / ${invoice.status}`], ['Auditoría', invoice.audit_title], ['Observaciones', invoice.observations || '—'],
+  ], theme: 'grid', headStyles: { fillColor: red }, styles: { fontSize: 8 } })
+  let nextY = pdf.lastAutoTable.finalY + 8
+  pdf.setFontSize(12); pdf.setFont('helvetica', 'bold'); pdf.text('Trazabilidad de etapas', 14, nextY)
+  autoTable(pdf, { startY: nextY + 4, head: [['Fecha', 'Movimiento', 'Responsable', 'Comentario']], body: events.map((event) => [formatDate(event.created_at, true), event.from_stage ? `${event.from_stage} > ${event.to_stage}` : event.to_stage, event.responsible, event.comment]), theme: 'striped', headStyles: { fillColor: [31, 41, 55] }, styles: { fontSize: 7 } })
+  nextY = pdf.lastAutoTable.finalY + 8
+  if (nextY > 245) { pdf.addPage(); nextY = 18 }
+  pdf.setFontSize(12); pdf.setFont('helvetica', 'bold'); pdf.text('Relación de evidencias', 14, nextY)
+  autoTable(pdf, { startY: nextY + 4, head: [['Archivo', 'Tipo', 'Tamaño', 'Cargado por']], body: evidence.length ? evidence.map((item) => [item.name, item.mime_type, `${(item.size / 1024).toFixed(1)} KB`, item.uploaded_by_name]) : [['Sin evidencias', '—', '—', '—']], theme: 'grid', headStyles: { fillColor: [100, 116, 139] }, styles: { fontSize: 7 } })
+  pdf.save(`expediente-${invoice.code}-${new Date().toISOString().slice(0, 10)}.pdf`)
+}
+
 export function buildExecutiveReport({ analytics, data, user }) {
   const controls = data?.controls || []
   const incidents = data?.incidents || []

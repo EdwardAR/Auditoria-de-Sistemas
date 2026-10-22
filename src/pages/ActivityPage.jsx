@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Activity, BookOpenCheck, CheckCircle2, Edit3, PlusCircle, Trash2, XCircle } from 'lucide-react'
+import { Activity, ArrowRight, BookOpenCheck, CheckCircle2, Download, Edit3, PlusCircle, RotateCcw, Trash2, Upload, XCircle } from 'lucide-react'
 import { PageHeader } from '../components/PageHeader'
 import { LoadingState } from '../components/LoadingState'
 import { EmptyState } from '../components/EmptyState'
@@ -10,8 +10,10 @@ const actionMeta = {
   INSERT: [PlusCircle, 'Creación', 'bg-blue-50 text-blue-600'], UPDATE: [Edit3, 'Actualización', 'bg-amber-50 text-amber-600'],
   DELETE: [Trash2, 'Eliminación', 'bg-red-50 text-red-600'], APPROVE: [CheckCircle2, 'Aprobación', 'bg-emerald-50 text-emerald-600'],
   REJECT: [XCircle, 'Rechazo', 'bg-red-50 text-red-600'],
+  TRANSITION: [ArrowRight, 'Cambio de etapa', 'bg-violet-50 text-violet-600'], REOPEN: [RotateCcw, 'Reapertura', 'bg-amber-50 text-amber-600'],
+  UPLOAD: [Upload, 'Carga de evidencia', 'bg-blue-50 text-blue-600'], DOWNLOAD: [Download, 'Descarga de evidencia', 'bg-slate-100 text-slate-600'],
 }
-const entityNames = { audits: 'Auditorías', risks: 'Riesgos', controls: 'Controles', security_incidents: 'Incidentes' }
+const entityNames = { audits: 'Auditorías', risks: 'Riesgos', controls: 'Controles', security_incidents: 'Incidentes', negotiable_invoices: 'Facturas negociables', evidence_metadata: 'Evidencias' }
 
 export function ActivityPage() {
   const { repository, revision } = useData()
