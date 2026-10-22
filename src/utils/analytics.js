@@ -9,6 +9,9 @@ export function buildAnalytics(data, referenceDate = new Date()) {
   const assessments = data?.controlAssessments || []
   const history = data?.riskHistory || []
   const invoices = data?.invoices || []
+  const schedule = data?.schedule || []
+  const auditEvidence = data?.auditEvidence || []
+  const findings = data?.findings || []
   const groupMonths = (rows, dateKey, valueKey) => Object.values(rows.reduce((acc, row) => {
     const month = String(row[dateKey] || '').slice(0, 7)
     if (!month) return acc
@@ -40,6 +43,7 @@ export function buildAnalytics(data, referenceDate = new Date()) {
     return acc
   }, {}))
   const overdueInvoices = invoices.filter((row) => row.status !== 'Cerrada' && row.due_date && new Date(`${row.due_date}T23:59:59`) < today)
+  const upcomingActivities = schedule.filter((row) => !['Completada', 'Cancelada'].includes(row.status)).sort((a, b) => `${a.date}${a.start_time}`.localeCompare(`${b.date}${b.start_time}`))
 
   return {
     kpis: {
@@ -47,7 +51,9 @@ export function buildAnalytics(data, referenceDate = new Date()) {
       pendingAudits: audits.filter((row) => ['Planificada', 'En Proceso'].includes(row.status)).length,
       finishedAudits: audits.filter((row) => ['Completada', 'Cerrada'].includes(row.status)).length,
       criticalRisks: risks.filter((row) => row.level === 'Crítico').length,
-      evaluatedControls: controls.length,
+      evaluatedControls: controls.filter((row) => !['No evaluado', undefined, null].includes(row.evaluation_status)).length,
+      compliantControls: controls.filter((row) => row.evaluation_status === 'Conforme').length,
+      pendingInternalEvidence: controls.filter((row) => row.evaluation_status === 'Requiere evidencia interna').length,
       securityIncidents: incidents.length,
       overdueAudits: overdueAudits.length,
       lowComplianceControls: lowComplianceControls.length,
@@ -58,6 +64,13 @@ export function buildAnalytics(data, referenceDate = new Date()) {
       closedInvoices: invoices.filter((row) => row.status === 'Cerrada').length,
       observedInvoices: invoices.filter((row) => row.status === 'Observada').length,
       overdueInvoices: overdueInvoices.length,
+      totalActivities: schedule.length,
+      completedActivities: schedule.filter((row) => row.status === 'Completada').length,
+      pendingActivities: schedule.filter((row) => row.status !== 'Completada' && row.status !== 'Cancelada').length,
+      overallProgress: schedule.length ? Math.round(schedule.reduce((total, row) => total + Number(row.progress || 0), 0) / schedule.length) : 0,
+      collectedEvidence: auditEvidence.filter((row) => row.status !== 'Planificada' && row.status !== 'Descartada').length,
+      totalFindings: findings.length,
+      pendingValidationFindings: findings.filter((row) => row.status === 'Pendiente de validación interna').length,
     },
     risksByCategory: countBy(risks, 'category'),
     risksByLevel: countBy(risks, 'level'),
@@ -67,6 +80,7 @@ export function buildAnalytics(data, referenceDate = new Date()) {
     riskEvolution,
     riskMatrix,
     invoicesByStage: countBy(invoices, 'current_stage'),
-    priorities: { overdueAudits, lowComplianceControls, openIncidents, inTreatmentRisks },
+    scheduleByStatus: countBy(schedule, 'status'),
+    priorities: { overdueAudits, lowComplianceControls, openIncidents, inTreatmentRisks, upcomingActivities, overdueInvoices },
   }
 }

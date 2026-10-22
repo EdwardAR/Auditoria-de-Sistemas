@@ -3,6 +3,7 @@ import { getDemoDatabase, saveDemoDatabase } from './storage'
 
 const now = () => new Date().toISOString()
 const uid = () => crypto.randomUUID()
+const SOFT_DELETE_ENTITIES = new Set(['audit_schedule', 'audit_processes', 'standards', 'audit_resources', 'audit_evidence'])
 
 export class DemoRepository {
   constructor(user) {
@@ -23,7 +24,7 @@ export class DemoRepository {
 
   async list(entity) {
     const rows = this.database()[this.table(entity)] || []
-    return [...rows].sort((a, b) => new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at))
+    return rows.filter((row) => !row.deleted_at).sort((a, b) => new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at))
   }
 
   async create(entity, payload) {
@@ -67,6 +68,11 @@ export class DemoRepository {
       approved_by: null,
       approved_at: null,
     }
+    if (entity === 'audit_schedule' && db[table][index].date !== payload.date) {
+      if (String(payload.reschedule_reason || '').trim().length < 5) throw new Error('La reprogramación requiere un motivo de al menos 5 caracteres.')
+      db.schedule_history.push({ id: uid(), activity_id: id, original_date: db[table][index].date, new_date: payload.date, reason: payload.reschedule_reason.trim(), changed_by: this.user.id, changed_by_name: this.user.full_name, changed_at: now() })
+      next.original_date ||= db[table][index].original_date || db[table][index].date
+    }
     if (entity === 'risks') next.level = riskLevel(next.probability, next.impact)
     db[table][index] = next
     this.recordEvent(db, table, id, 'UPDATE', `Actualización de ${entity}; aprobación reiniciada.`)
@@ -79,8 +85,12 @@ export class DemoRepository {
     if (!canDelete(this.user?.role)) throw new Error('Solo un administrador puede eliminar registros.')
     const db = this.database()
     const table = this.table(entity)
-    db[table] = db[table].filter((row) => row.id !== id)
-    this.recordEvent(db, table, id, 'DELETE', `Eliminación de ${entity}.`)
+    if (SOFT_DELETE_ENTITIES.has(entity)) {
+      const index = db[table].findIndex((row) => row.id === id && !row.deleted_at)
+      if (index < 0) throw new Error('Registro no encontrado.')
+      db[table][index] = { ...db[table][index], deleted_at: now(), updated_by: this.user.id, updated_at: now() }
+    } else db[table] = db[table].filter((row) => row.id !== id)
+    this.recordEvent(db, table, id, 'DELETE', `${SOFT_DELETE_ENTITIES.has(entity) ? 'Eliminación lógica' : 'Eliminación'} de ${entity}.`)
     this.commit(db)
   }
 
@@ -114,7 +124,14 @@ export class DemoRepository {
       controlAssessments: db.control_assessments,
       riskHistory: db.risk_history,
       invoices: db.negotiable_invoices.filter((row) => !row.deleted_at),
+      schedule: db.audit_schedule,
+      auditEvidence: db.audit_evidence,
     }
+  }
+
+  async getAuditProgram() {
+    const db = this.database()
+    return { program: db.audit_program, team: db.audit_team, processes: db.audit_processes, standards: db.standards, resources: db.audit_resources, schedule: db.audit_schedule, scheduleHistory: db.schedule_history }
   }
 
   async listInvoices() {

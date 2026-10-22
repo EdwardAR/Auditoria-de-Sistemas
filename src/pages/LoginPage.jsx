@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Navigate, useLocation, useNavigate, Link } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowRight, BarChart3, Eye, EyeOff, LoaderCircle, LockKeyhole, ShieldCheck } from 'lucide-react'
 import { Brand } from '../components/Brand'
@@ -82,7 +82,7 @@ export function LoginPage() {
               transition={{ duration: 0.55, delay: 0.14 }}
               className="mt-6 max-w-lg text-base leading-7 text-slate-300"
             >
-              Una visión integral de auditoría tecnológica, riesgos, controles e incidentes para fortalecer la resiliencia del banco.
+              Auditoría académica de la gestión electrónica de facturas negociables, con riesgos, controles, evidencias y trazabilidad documental.
             </motion.p>
           </div>
         </div>
@@ -253,9 +253,7 @@ export function LoginPage() {
               transition={{ duration: 0.45, delay: 0.42 }}
               className="mt-8 flex items-center justify-between border-t border-slate-200 pt-5 text-xs text-slate-500"
             >
-              <Link to="/contact" className="font-semibold text-brand-500 transition hover:underline">
-                Contacto y soporte
-              </Link>
+              <span className="font-semibold text-brand-500">Scotiabank Perú · Factoring Electrónico</span>
               <span>Proyecto auditoría de sistemas</span>
             </motion.div>
           </motion.div>

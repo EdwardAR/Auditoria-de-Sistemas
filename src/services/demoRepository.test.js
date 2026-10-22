@@ -57,4 +57,22 @@ describe('DemoRepository', () => {
     const metadata = await repository.addInvoiceEvidence(invoices[0].id, { name: 'sustento.pdf', type: 'application/pdf', size: 1024 })
     expect(metadata.uploaded_by).toBe(demoUsers[4].id)
   })
+
+  it('conserva historial cuando se reprograma una actividad', async () => {
+    const repository = new DemoRepository(demoUsers[1])
+    const activity = (await repository.list('audit_schedule'))[0]
+    await expect(repository.update('audit_schedule', activity.id, { ...activity, date: '2026-11-05', reschedule_reason: '' })).rejects.toThrow('requiere un motivo')
+    await repository.update('audit_schedule', activity.id, { ...activity, date: '2026-11-05', reschedule_reason: 'Indisponibilidad de la fuente documental.' })
+    const database = repository.database()
+    expect(database.schedule_history).toHaveLength(1)
+    expect(database.schedule_history[0]).toMatchObject({ original_date: activity.date, new_date: '2026-11-05' })
+  })
+
+  it('aplica eliminación lógica a los catálogos del expediente', async () => {
+    const repository = new DemoRepository(demoUsers[0])
+    const process = (await repository.list('audit_processes'))[0]
+    await repository.remove('audit_processes', process.id)
+    expect((await repository.list('audit_processes')).some((row) => row.id === process.id)).toBe(false)
+    expect(repository.database().audit_processes.find((row) => row.id === process.id).deleted_at).toBeTruthy()
+  })
 })

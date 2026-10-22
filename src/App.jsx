@@ -14,6 +14,7 @@ const ProfilePage = lazy(() => import('./pages/ProfilePage').then((module) => ({
 const ActivityPage = lazy(() => import('./pages/ActivityPage').then((module) => ({ default: module.ActivityPage })))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then((module) => ({ default: module.NotFoundPage })))
 const InvoicesPage = lazy(() => import('./pages/InvoicesPage').then((module) => ({ default: module.InvoicesPage })))
+const AuditProgramPage = lazy(() => import('./pages/AuditProgramPage').then((module) => ({ default: module.AuditProgramPage })))
 
 const fallback = <div className="grid min-h-screen place-items-center bg-slate-50"><LoaderCircle className="h-8 w-8 animate-spin text-brand-500" /></div>
 
@@ -25,6 +26,12 @@ export default function App() {
       <Route element={<AppShell />}>
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard" element={<DashboardPage />} />
+        <Route path="audit-program" element={<AuditProgramPage />} />
+        <Route path="schedule" element={<EntityPage entity="audit_schedule" />} />
+        <Route path="processes" element={<EntityPage entity="audit_processes" />} />
+        <Route path="standards" element={<EntityPage entity="standards" />} />
+        <Route path="resources" element={<EntityPage entity="audit_resources" />} />
+        <Route path="evidence" element={<EntityPage entity="audit_evidence" />} />
         <Route path="audits" element={<EntityPage entity="audits" />} />
         <Route path="risks" element={<EntityPage entity="risks" />} />
         <Route path="controls" element={<EntityPage entity="controls" />} />

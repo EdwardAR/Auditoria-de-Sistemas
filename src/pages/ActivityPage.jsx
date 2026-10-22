@@ -13,7 +13,7 @@ const actionMeta = {
   TRANSITION: [ArrowRight, 'Cambio de etapa', 'bg-violet-50 text-violet-600'], REOPEN: [RotateCcw, 'Reapertura', 'bg-amber-50 text-amber-600'],
   UPLOAD: [Upload, 'Carga de evidencia', 'bg-blue-50 text-blue-600'], DOWNLOAD: [Download, 'Descarga de evidencia', 'bg-slate-100 text-slate-600'],
 }
-const entityNames = { audits: 'Auditorías', risks: 'Riesgos', controls: 'Controles', security_incidents: 'Incidentes', negotiable_invoices: 'Facturas negociables', evidence_metadata: 'Evidencias' }
+const entityNames = { audits: 'Auditorías', risks: 'Riesgos', controls: 'Controles', security_incidents: 'Incidentes', negotiable_invoices: 'Facturas negociables', evidence_metadata: 'Archivos de evidencia', audit_schedule: 'Cronograma', audit_processes: 'Procesos auditados', standards: 'Normativa', audit_resources: 'Recursos', audit_evidence: 'Evidencias documentales' }
 
 export function ActivityPage() {
   const { repository, revision } = useData()

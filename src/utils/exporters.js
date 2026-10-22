@@ -98,7 +98,6 @@ export function exportInvoicePdf({ invoice, events, evidence }) {
 
 export function buildExecutiveReport({ analytics, data, user }) {
   const controls = data?.controls || []
-  const incidents = data?.incidents || []
   const risks = data?.risks || []
   const averageCompliance = controls.length ? Math.round(controls.reduce((total, row) => total + Number(row.compliance || 0), 0) / controls.length) : 0
   const criticalRiskNames = risks.filter((row) => row.level === 'Crítico').map((row) => row.name)
@@ -106,14 +105,14 @@ export function buildExecutiveReport({ analytics, data, user }) {
     issuedAt: formatDate(new Date().toISOString(), true),
     responsible: user?.full_name || 'Usuario del sistema',
     kpis: [
-      ['Auditorías totales', analytics.kpis.totalAudits], ['Auditorías pendientes', analytics.kpis.pendingAudits],
-      ['Auditorías finalizadas', analytics.kpis.finishedAudits], ['Riesgos críticos', analytics.kpis.criticalRisks],
-      ['Controles evaluados', analytics.kpis.evaluatedControls], ['Incidentes de seguridad', analytics.kpis.securityIncidents],
+      ['Avance general', `${analytics.kpis.overallProgress}%`], ['Actividades pendientes', analytics.kpis.pendingActivities],
+      ['Actividades completadas', analytics.kpis.completedActivities], ['Riesgos críticos', analytics.kpis.criticalRisks],
+      ['Controles evaluados', analytics.kpis.evaluatedControls], ['Evidencias recopiladas', analytics.kpis.collectedEvidence],
     ],
     auditDistribution: analytics.auditsByStatus,
     criticalRiskNames,
     averageCompliance,
-    totalIncidents: incidents.length,
+    pendingInternalEvidence: analytics.kpis.pendingInternalEvidence,
   }
 }
 
@@ -143,7 +142,7 @@ export function exportExecutivePdf(payload) {
   pdf.setFont('helvetica', 'normal')
   pdf.setFontSize(10)
   const riskText = report.criticalRiskNames.length ? `Riesgos críticos: ${report.criticalRiskNames.join('; ')}.` : 'No se identifican riesgos críticos activos.'
-  const summaryLines = pdf.splitTextToSize(`${riskText} Cumplimiento promedio de controles: ${report.averageCompliance}%. Incidentes de seguridad registrados: ${report.totalIncidents}.`, 180)
+  const summaryLines = pdf.splitTextToSize(`${riskText} Cumplimiento documental promedio de controles: ${report.averageCompliance}%. Controles pendientes de evidencia interna: ${report.pendingInternalEvidence}; esta condición no constituye por sí sola una deficiencia.`, 180)
   pdf.text(summaryLines, 14, summaryY + 7)
   pdf.setDrawColor(...red)
   pdf.line(14, 285, 196, 285)

@@ -21,6 +21,8 @@ export function EntityForm({ config, entity, initial, onSubmit, onCancel }) {
       }
     })
     if (entity === 'audits' && values.start_date && values.end_date && values.end_date < values.start_date) next.end_date = 'La fecha de fin debe ser posterior al inicio.'
+    if (entity === 'audit_schedule' && values.start_time && values.end_time && values.end_time <= values.start_time) next.end_time = 'La hora de fin debe ser posterior al inicio.'
+    if (entity === 'audit_schedule' && initial?.date && values.date !== initial.date && String(values.reschedule_reason || '').trim().length < 5) next.reschedule_reason = 'Indica el motivo de reprogramación (mínimo 5 caracteres).'
     setErrors(next)
     return Object.keys(next).length === 0
   }

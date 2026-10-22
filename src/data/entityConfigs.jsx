@@ -1,4 +1,4 @@
-import { Activity, ClipboardCheck, ClipboardList, FileSearch, ListChecks, ShieldAlert } from 'lucide-react'
+import { Activity, BookOpen, CalendarDays, ClipboardCheck, ClipboardList, FileArchive, FileSearch, FolderKanban, ListChecks, PackageCheck, ShieldAlert } from 'lucide-react'
 import { Badge } from '../components/Badge'
 import { AUDIT_STATUSES, INCIDENT_STATUSES, RISK_STATUSES, SEVERITIES } from '../utils/constants'
 import { formatDate } from '../utils/formatters'
@@ -33,9 +33,20 @@ export const entityConfigs = {
     fields: [
       { name: 'name', label: 'Nombre del riesgo', required: true, span: 2 },
       { name: 'category', label: 'Categoría', required: true, placeholder: 'Ciberseguridad, Continuidad…' },
+      { name: 'description', label: 'Descripción', type: 'textarea', required: true, span: 2 },
+      { name: 'process', label: 'Proceso afectado', required: true },
+      { name: 'asset', label: 'Activo afectado', required: true },
+      { name: 'threat', label: 'Amenaza', required: true },
+      { name: 'vulnerability', label: 'Vulnerabilidad o condición', required: true },
+      { name: 'cia', label: 'Dimensión de seguridad', type: 'select', options: ['Confidencialidad', 'Integridad', 'Disponibilidad', 'Confidencialidad, Integridad y Disponibilidad'], required: true },
       { name: 'status', label: 'Estado', type: 'select', options: RISK_STATUSES, required: true },
       { name: 'probability', label: 'Probabilidad (1–5)', type: 'number', min: 1, max: 5, required: true },
       { name: 'impact', label: 'Impacto (1–5)', type: 'number', min: 1, max: 5, required: true },
+      { name: 'residual_level', label: 'Riesgo residual', type: 'select', options: ['Bajo', 'Medio', 'Alto', 'Crítico'], required: true },
+      { name: 'treatment', label: 'Tratamiento', type: 'textarea', span: 2 },
+      { name: 'responsible', label: 'Responsable', required: true },
+      { name: 'target_date', label: 'Fecha objetivo', type: 'date', required: true },
+      { name: 'related_standard', label: 'Norma relacionada', required: true },
     ],
     columns: [
       { key: 'name', label: 'Riesgo', render: (row) => <div><p className="max-w-xs font-semibold text-slate-800">{row.name}</p><p className="mt-1 text-xs text-slate-500">{row.category}</p></div> },
@@ -47,17 +58,23 @@ export const entityConfigs = {
   controls: {
     singular: 'control', newLabel: 'Nuevo control', plural: 'Controles internos', eyebrow: 'Marco de control', icon: ClipboardCheck,
     description: 'Evalúa la eficacia de controles y monitorea su nivel de cumplimiento mensual.',
-    searchKeys: ['name', 'process', 'responsible'], filterKey: 'approval_status', filterOptions: ['Pendiente', 'Aprobado', 'Rechazado'],
+    searchKeys: ['name', 'process', 'responsible', 'standard'], filterKey: 'evaluation_status', filterOptions: ['No evaluado', 'En evaluación', 'Conforme', 'Parcialmente conforme', 'No conforme', 'No verificable públicamente', 'Requiere evidencia interna'],
     fields: [
       { name: 'name', label: 'Nombre del control', required: true, span: 2 },
+      { name: 'description', label: 'Descripción', type: 'textarea', required: true, span: 2 },
       { name: 'process', label: 'Proceso', required: true },
+      { name: 'risk', label: 'Riesgo relacionado', required: true },
+      { name: 'standard', label: 'Norma relacionada', required: true },
+      { name: 'control_type', label: 'Tipo de control', type: 'select', options: ['Preventivo', 'Detectivo', 'Correctivo'], required: true },
+      { name: 'evaluation_status', label: 'Estado de evaluación', type: 'select', options: ['No evaluado', 'En evaluación', 'Conforme', 'Parcialmente conforme', 'No conforme', 'No verificable públicamente', 'Requiere evidencia interna'], required: true },
+      { name: 'required_evidence', label: 'Evidencia requerida', type: 'textarea', span: 2 },
       { name: 'responsible', label: 'Responsable', required: true },
       { name: 'compliance', label: 'Cumplimiento (%)', type: 'number', min: 0, max: 100, required: true },
       { name: 'observations', label: 'Observaciones', type: 'textarea', span: 2 },
     ],
     columns: [
       { key: 'name', label: 'Control', render: (row) => <div><p className="max-w-xs font-semibold text-slate-800">{row.name}</p><p className="mt-1 text-xs text-slate-500">{row.process}</p></div> },
-      { key: 'responsible', label: 'Responsable' },
+      { key: 'evaluation_status', label: 'Evaluación', render: (row) => <Badge>{row.evaluation_status || 'No evaluado'}</Badge> },
       { key: 'compliance', label: 'Cumplimiento', render: (row) => <div className="min-w-32"><div className="mb-1 flex justify-between text-xs font-semibold"><span>{row.compliance}%</span></div><div className="h-2 overflow-hidden rounded-full bg-slate-100"><div className={`h-full rounded-full ${row.compliance >= 85 ? 'bg-emerald-500' : row.compliance >= 70 ? 'bg-amber-500' : 'bg-brand-500'}`} style={{ width: `${row.compliance}%` }} /></div></div> }, approvalColumn,
     ],
   },
@@ -82,15 +99,18 @@ export const entityConfigs = {
   findings: {
     singular: 'hallazgo', newLabel: 'Nuevo hallazgo', plural: 'Hallazgos de auditoría', eyebrow: 'Resultados de auditoría', icon: ClipboardList,
     description: 'Documenta brechas, evidencias y recomendaciones derivadas de cada revisión tecnológica.',
-    searchKeys: ['title', 'description', 'audit_title', 'owner'], filterKey: 'status', filterOptions: ['Abierto', 'En remediación', 'Verificado', 'Cerrado'],
+    searchKeys: ['title', 'description', 'audit_title', 'owner', 'criterion'], filterKey: 'status', filterOptions: ['Abierto', 'Pendiente de validación interna', 'En remediación', 'Verificado', 'Cerrado'],
     fields: [
       { name: 'title', label: 'Título del hallazgo', required: true, span: 2 },
       { name: 'audit_title', label: 'Auditoría relacionada', required: true, placeholder: 'Ej. Auditoría de accesos privilegiados' },
       { name: 'severity', label: 'Severidad', type: 'select', options: ['Baja', 'Media', 'Alta', 'Crítica'], required: true },
-      { name: 'status', label: 'Estado', type: 'select', options: ['Abierto', 'En remediación', 'Verificado', 'Cerrado'], required: true },
+      { name: 'status', label: 'Estado', type: 'select', options: ['Abierto', 'Pendiente de validación interna', 'En remediación', 'Verificado', 'Cerrado'], required: true },
       { name: 'owner', label: 'Responsable', required: true },
       { name: 'due_date', label: 'Fecha límite', type: 'date', required: true },
       { name: 'description', label: 'Descripción y evidencia', type: 'textarea', required: true, span: 2 },
+      { name: 'criterion', label: 'Criterio', type: 'textarea', required: true, span: 2 },
+      { name: 'condition', label: 'Condición observada', type: 'textarea', required: true, span: 2 },
+      { name: 'related_risk', label: 'Riesgo asociado', required: true },
       { name: 'recommendation', label: 'Recomendación', type: 'textarea', required: true, span: 2 },
     ],
     columns: [
@@ -121,5 +141,48 @@ export const entityConfigs = {
       { key: 'due_date', label: 'Fecha límite', render: (row) => formatDate(row.due_date) },
       { key: 'status', label: 'Estado', render: (row) => <Badge>{row.status}</Badge> }, approvalColumn,
     ],
+  },
+  audit_schedule: {
+    singular: 'actividad', newLabel: 'Nueva actividad', plural: 'Cronograma de auditoría', eyebrow: 'Plan de trabajo', icon: CalendarDays,
+    description: 'Programa actividades, responsables y avances; toda reprogramación conserva su fecha original y motivo.',
+    searchKeys: ['activity', 'responsible', 'phase'], filterKey: 'status', filterOptions: ['Pendiente', 'En curso', 'Completada', 'Reprogramada', 'Cancelada'],
+    fields: [
+      { name: 'activity', label: 'Actividad', required: true, span: 2 }, { name: 'date', label: 'Fecha', type: 'date', required: true },
+      { name: 'start_time', label: 'Hora de inicio', type: 'time', required: true }, { name: 'end_time', label: 'Hora de fin', type: 'time', required: true },
+      { name: 'responsible', label: 'Responsables', required: true, placeholder: 'Separados por comas' }, { name: 'phase', label: 'Fase', type: 'select', options: ['Planificación', 'Ejecución', 'Informe'], required: true },
+      { name: 'status', label: 'Estado', type: 'select', options: ['Pendiente', 'En curso', 'Completada', 'Reprogramada', 'Cancelada'], required: true },
+      { name: 'progress', label: 'Avance (%)', type: 'number', min: 0, max: 100, required: true }, { name: 'reschedule_reason', label: 'Motivo de reprogramación', type: 'textarea', span: 2 },
+      { name: 'observations', label: 'Observaciones', type: 'textarea', span: 2 },
+    ],
+    columns: [
+      { key: 'activity', label: 'Actividad', render: (row) => <div><p className="max-w-sm font-semibold text-slate-800">{row.activity}</p><p className="text-xs text-slate-500">{row.phase}</p></div> },
+      { key: 'date', label: 'Fecha y hora', render: (row) => <span className="whitespace-nowrap text-xs">{formatDate(row.date)} · {row.start_time}–{row.end_time}</span> },
+      { key: 'responsible', label: 'Responsables' }, { key: 'progress', label: 'Avance', render: (row) => `${row.progress}%` }, { key: 'status', label: 'Estado', render: (row) => <Badge>{row.status}</Badge> },
+    ],
+  },
+  audit_processes: {
+    singular: 'proceso', newLabel: 'Nuevo proceso', plural: 'Procesos auditados', eyebrow: 'Alcance reutilizable', icon: FolderKanban,
+    description: 'Procesos del factoring electrónico reutilizables en riesgos, controles, evidencias y hallazgos.',
+    searchKeys: ['code', 'name', 'description'], filterKey: 'status', filterOptions: ['En alcance', 'Fuera de alcance', 'Completado'],
+    fields: [{ name: 'code', label: 'Código', required: true }, { name: 'name', label: 'Proceso', required: true }, { name: 'description', label: 'Descripción', type: 'textarea', required: true, span: 2 }, { name: 'cia', label: 'Dimensiones CIA', required: true }, { name: 'status', label: 'Estado', type: 'select', options: ['En alcance', 'Fuera de alcance', 'Completado'], required: true }],
+    columns: [{ key: 'code', label: 'Código' }, { key: 'name', label: 'Proceso' }, { key: 'cia', label: 'Dimensiones' }, { key: 'status', label: 'Estado', render: (row) => <Badge>{row.status}</Badge> }, approvalColumn],
+  },
+  standards: {
+    singular: 'norma', newLabel: 'Nueva norma', plural: 'Normativa y marcos', eyebrow: 'Criterios de auditoría', icon: BookOpen,
+    description: 'Catálogo centralizado de normativa peruana, estándares y marcos reutilizables.', searchKeys: ['code', 'name', 'type', 'description'], filterKey: 'application_status', filterOptions: ['Aplicable', 'En revisión', 'No aplicable'],
+    fields: [{ name: 'code', label: 'Código o número', required: true }, { name: 'name', label: 'Nombre', required: true }, { name: 'type', label: 'Tipo', required: true }, { name: 'version', label: 'Año o versión', required: true }, { name: 'description', label: 'Descripción', type: 'textarea', required: true, span: 2 }, { name: 'application_status', label: 'Estado de aplicación', type: 'select', options: ['Aplicable', 'En revisión', 'No aplicable'], required: true }],
+    columns: [{ key: 'code', label: 'Código' }, { key: 'type', label: 'Tipo' }, { key: 'version', label: 'Versión' }, { key: 'application_status', label: 'Aplicación', render: (row) => <Badge>{row.application_status}</Badge> }, approvalColumn],
+  },
+  audit_resources: {
+    singular: 'recurso', newLabel: 'Nuevo recurso', plural: 'Recursos de auditoría', eyebrow: 'Capacidad operativa', icon: PackageCheck,
+    description: 'Inventario de recursos previstos para ejecutar el trabajo académico.', searchKeys: ['code', 'category', 'name', 'responsible'], filterKey: 'availability', filterOptions: ['Disponible', 'Limitado', 'No disponible'],
+    fields: [{ name: 'code', label: 'ID', required: true }, { name: 'category', label: 'Categoría', required: true }, { name: 'name', label: 'Recurso o descripción', required: true, span: 2 }, { name: 'purpose', label: 'Aplicación o propósito', type: 'textarea', required: true, span: 2 }, { name: 'availability', label: 'Disponibilidad', type: 'select', options: ['Disponible', 'Limitado', 'No disponible'], required: true }, { name: 'responsible', label: 'Responsable', required: true }],
+    columns: [{ key: 'code', label: 'ID' }, { key: 'category', label: 'Categoría' }, { key: 'name', label: 'Recurso' }, { key: 'responsible', label: 'Responsable' }, { key: 'availability', label: 'Disponibilidad', render: (row) => <Badge>{row.availability}</Badge> }],
+  },
+  audit_evidence: {
+    singular: 'evidencia', newLabel: 'Nueva evidencia', plural: 'Evidencias documentales', eyebrow: 'Sustento verificable', icon: FileArchive,
+    description: 'Fuentes públicas y documentos que sustentan controles, riesgos y observaciones sin afirmar vulnerabilidades no comprobadas.', searchKeys: ['title', 'source', 'process', 'responsible'], filterKey: 'status', filterOptions: ['Planificada', 'Recopilada', 'Validada', 'Descartada'],
+    fields: [{ name: 'title', label: 'Título', required: true, span: 2 }, { name: 'evidence_type', label: 'Tipo', type: 'select', options: ['Documento público', 'Página web oficial', 'Norma legal', 'Norma técnica', 'Captura de pantalla', 'Documento institucional', 'Matriz', 'Observación del auditor'], required: true }, { name: 'source', label: 'Fuente', required: true }, { name: 'source_url', label: 'URL configurable', type: 'url' }, { name: 'obtained_at', label: 'Fecha de obtención', type: 'date', required: true }, { name: 'responsible', label: 'Responsable', required: true }, { name: 'process', label: 'Proceso relacionado', required: true }, { name: 'classification', label: 'Clasificación', type: 'select', options: ['Pública', 'Uso interno académico', 'Restringida'], required: true }, { name: 'status', label: 'Estado', type: 'select', options: ['Planificada', 'Recopilada', 'Validada', 'Descartada'], required: true }, { name: 'observations', label: 'Observaciones', type: 'textarea', span: 2 }],
+    columns: [{ key: 'title', label: 'Evidencia' }, { key: 'evidence_type', label: 'Tipo' }, { key: 'source', label: 'Fuente' }, { key: 'process', label: 'Proceso' }, { key: 'status', label: 'Estado', render: (row) => <Badge>{row.status}</Badge> }],
   },
 }

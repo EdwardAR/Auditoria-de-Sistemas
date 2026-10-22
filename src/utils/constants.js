@@ -1,6 +1,6 @@
 export const ROLES = ['Administrador', 'Auditor', 'Supervisor', 'Responsable del Área', 'Consulta']
 export const AUDIT_STATUSES = ['Planificada', 'En Proceso', 'Completada', 'Cerrada']
-export const RISK_STATUSES = ['Identificado', 'En Tratamiento', 'Mitigado', 'Aceptado']
+export const RISK_STATUSES = ['Identificado', 'En análisis', 'Evaluado', 'En Tratamiento', 'Mitigado', 'Aceptado', 'Cerrado']
 export const INCIDENT_STATUSES = ['Abierto', 'En Investigación', 'Contenido', 'Resuelto', 'Cerrado']
 export const APPROVAL_STATUSES = ['Pendiente', 'Aprobado', 'Rechazado']
 export const RISK_LEVELS = ['Bajo', 'Medio', 'Alto', 'Crítico']
@@ -16,6 +16,11 @@ export const ENTITY_TABLES = {
   incidents: 'security_incidents',
   findings: 'findings',
   action_plans: 'action_plans',
+  audit_schedule: 'audit_schedule',
+  audit_processes: 'audit_processes',
+  standards: 'standards',
+  audit_resources: 'audit_resources',
+  audit_evidence: 'audit_evidence',
 }
 
 export const ENTITY_LABELS = {
@@ -25,6 +30,11 @@ export const ENTITY_LABELS = {
   incidents: 'incidente',
   findings: 'hallazgo',
   action_plans: 'plan de acción',
+  audit_schedule: 'actividad',
+  audit_processes: 'proceso',
+  standards: 'norma',
+  audit_resources: 'recurso',
+  audit_evidence: 'evidencia',
 }
 
 export const canEdit = (role) => ['Administrador', 'Auditor'].includes(role)

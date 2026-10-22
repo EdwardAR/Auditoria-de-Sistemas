@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
-  Activity, BarChart3, BookOpenCheck, ChevronRight, ClipboardCheck, ClipboardList, FileSearch, ReceiptText,
-  LayoutDashboard, ListChecks, LogOut, Menu, ShieldAlert, ShieldCheck, UserCircle, X,
+  BarChart3, BookOpen, BookOpenCheck, CalendarDays, ChevronRight, ClipboardCheck, ClipboardList, FileArchive, FileSearch, FolderKanban, PackageCheck, ReceiptText,
+  LayoutDashboard, ListChecks, LogOut, Menu, ShieldAlert, UserCircle, X,
 } from 'lucide-react'
 import { Brand } from '../components/Brand'
 import { useAuth } from '../hooks/useAuth'
@@ -12,15 +12,19 @@ import { initials } from '../utils/formatters'
 
 const navItems = [
   { to: '/dashboard', label: 'Dashboard ejecutivo', icon: LayoutDashboard },
+  { to: '/audit-program', label: 'Expediente de auditoría', icon: BookOpenCheck },
+  { to: '/schedule', label: 'Cronograma', icon: CalendarDays },
+  { to: '/processes', label: 'Procesos auditados', icon: FolderKanban },
   { to: '/audits', label: 'Auditorías', icon: FileSearch },
   { to: '/risks', label: 'Riesgos tecnológicos', icon: ShieldAlert },
   { to: '/controls', label: 'Controles internos', icon: ClipboardCheck },
-  { to: '/incidents', label: 'Incidentes', icon: Activity },
+  { to: '/standards', label: 'Normativa y marcos', icon: BookOpen },
+  { to: '/evidence', label: 'Evidencias documentales', icon: FileArchive },
   { to: '/findings', label: 'Hallazgos', icon: ClipboardList },
   { to: '/action-plans', label: 'Planes de acción', icon: ListChecks },
   { to: '/negotiable-invoices', label: 'Facturas negociables', icon: ReceiptText },
+  { to: '/resources', label: 'Recursos', icon: PackageCheck },
   { to: '/analytics', label: 'Dashboard analítico', icon: BarChart3 },
-  { to: '/information-security', label: 'Seguridad de la información', icon: ShieldCheck },
   { to: '/profile', label: 'Mi perfil', icon: UserCircle },
 ]
 
@@ -29,6 +33,7 @@ const titles = {
   controls: 'Controles internos', incidents: 'Incidentes de seguridad', analytics: 'Análisis y tendencias',
   'information-security': 'Seguridad de la información', profile: 'Perfil de usuario', activity: 'Bitácora de actividad', findings: 'Hallazgos de auditoría', 'action-plans': 'Planes de acción',
   'negotiable-invoices': 'Facturas negociables',
+  'audit-program': 'Expediente de auditoría', schedule: 'Cronograma', processes: 'Procesos auditados', standards: 'Normativa y marcos', resources: 'Recursos de auditoría', evidence: 'Evidencias documentales',
 }
 
 function SidebarContent({ onNavigate }) {
