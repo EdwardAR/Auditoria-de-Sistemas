@@ -61,16 +61,10 @@ export const ROLE_NAVIGATION = {
       { label: 'Mis pendientes', items: [dashboard, modules.findings, modules.plans, modules.evidence] },
     ],
   },
-  Consulta: {
-    description: 'Consulta ejecutiva sin opciones de modificación.',
-    sections: [
-      { label: 'Consulta', items: [dashboard, modules.audits, modules.analytics] },
-    ],
-  },
 }
 
 export function getRoleNavigation(role) {
-  return ROLE_NAVIGATION[role] || ROLE_NAVIGATION.Consulta
+  return ROLE_NAVIGATION[role] || ROLE_NAVIGATION['Responsable del Área']
 }
 
 export function getRoleModules(role) {

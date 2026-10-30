@@ -1,4 +1,4 @@
-export const ROLES = ['Administrador', 'Auditor', 'Supervisor', 'Responsable del Área', 'Consulta']
+export const ROLES = ['Administrador', 'Auditor', 'Supervisor', 'Responsable del Área']
 export const AUDIT_STATUSES = ['Planificada', 'En Proceso', 'Completada', 'Cerrada']
 export const RISK_STATUSES = ['Identificado', 'En análisis', 'Evaluado', 'En Tratamiento', 'Mitigado', 'Aceptado', 'Cerrado']
 export const INCIDENT_STATUSES = ['Abierto', 'En Investigación', 'Contenido', 'Resuelto', 'Cerrado']

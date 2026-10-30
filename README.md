@@ -7,7 +7,7 @@ Aplicación web académica para gestionar auditorías, riesgos tecnológicos, co
 ## Capacidades principales
 
 - Autenticación y sesiones persistentes con Supabase Auth.
-- Cuatro perfiles: Administrador, Auditor, Supervisor y Consulta.
+- Cuatro perfiles: Administrador, Auditor, Supervisor y Responsable del Área.
 - CRUD completo con búsqueda, filtros, paginación, validación y vistas responsive.
 - Flujo formal de aprobación con decisión, observación, aprobador y fecha.
 - Matriz automática de riesgos 5×5 y cumplimiento de controles de 0 a 100%.
@@ -129,7 +129,7 @@ La pantalla de acceso ofrece botones rápidos. También se puede ingresar manual
 | Administrador | `admin@demo.edu` |
 | Auditor | `auditor@demo.edu` |
 | Supervisor | `supervisor@demo.edu` |
-| Consulta | `consulta@demo.edu` |
+| Responsable del Área | `responsable@demo.edu` |
 
 Los cambios persisten en el navegador. Para restaurar el dataset, eliminar las claves `audit360_demo_database_v1` y `audit360_demo_session_v1` del almacenamiento local.
 
@@ -144,7 +144,7 @@ Los roles representan responsabilidades distintas dentro del ciclo de auditoría
 | **Administrador** | Administra la plataforma y supervisa todo el proceso. | Crear, consultar, editar y eliminar auditorías, riesgos, controles e incidentes; aprobar o rechazar registros; consultar la bitácora. | No tiene restricciones funcionales en el modo demo. |
 | **Auditor** | Ejecuta revisiones y documenta evidencias. | Consultar registros; crear auditorías, riesgos, controles e incidentes; editar información operativa; exportar CSV. | Eliminar registros, aprobar/rechazar o consultar la bitácora restringida. |
 | **Supervisor** | Revisa resultados y toma decisiones de aprobación. | Consultar todos los registros; aprobar o rechazar registros con observaciones; consultar la bitácora. | Crear, editar o eliminar información operativa. |
-| **Consulta** | Consulta ejecutiva y seguimiento. | Ver dashboards, analítica, auditorías, riesgos, controles, incidentes y exportar la información visible. | Crear, editar, eliminar, aprobar/rechazar o consultar contactos y bitácora restringida. |
+| **Responsable del Área** | Atiende observaciones y entrega los sustentos solicitados. | Consultar hallazgos y planes asignados; revisar sus expedientes; adjuntar evidencias. | Crear registros de auditoría, eliminar, aprobar/rechazar o consultar la bitácora. |
 
 ### Flujo recomendado para la demostración
 
@@ -152,7 +152,7 @@ Los roles representan responsabilidades distintas dentro del ciclo de auditoría
 2. Cierra sesión e ingresa como **Supervisor**. Revisa el registro, agrega una observación y apruébalo o recházalo.
 3. Regresa como **Auditor** y muestra que editar un registro aprobado reinicia su aprobación a `Pendiente`.
 4. Ingresa como **Administrador** para mostrar eliminación, bitácora y control total.
-5. Finalmente, ingresa como **Consulta** para demostrar que los botones de modificación y aprobación no aparecen.
+5. Finalmente, ingresa como **Responsable del Área** para mostrar la atención de hallazgos y la entrega de evidencias sin permisos de aprobación.
 
 En modo demo, estos permisos se validan en `DemoRepository`. En modo Supabase, las mismas reglas se refuerzan mediante funciones, privilegios de columnas y Row Level Security (RLS), por lo que ocultar un botón no es la única barrera de seguridad.
 
@@ -217,7 +217,7 @@ No se debe colocar una `service_role` key en variables `VITE_*`: Vite las expone
 
 ### Creación de usuarios adicionales
 
-El trigger `handle_new_user` crea automáticamente un perfil con rol `Consulta`. Un administrador de Supabase puede cambiarlo de forma controlada:
+El trigger `handle_new_user` crea automáticamente un perfil con rol `Responsable del Área`, el perfil operativo más restringido. Un administrador de Supabase puede cambiarlo de forma controlada:
 
 ```sql
 update public.profiles
@@ -229,10 +229,11 @@ No existe registro público ni edición de roles desde el cliente.
 
 ## Seguridad y RLS
 
-| Operación | Administrador | Auditor | Supervisor | Consulta |
+| Operación | Administrador | Auditor | Supervisor | Responsable del Área |
 |---|:---:|:---:|:---:|:---:|
 | Leer registros operativos | Sí | Sí | Sí | Sí |
-| Crear y editar | Sí | Sí | No | No |
+| Crear y editar registros de auditoría | Sí | Sí | No | No |
+| Adjuntar evidencias propias | Sí | Sí | No | Sí |
 | Eliminar | Sí | No | No | No |
 | Aprobar o rechazar | Sí | No | Sí | No |
 | Consultar bitácora | Sí | No | Sí | No |
@@ -246,7 +247,7 @@ La bitácora y los históricos no aceptan escritura directa desde clientes auten
 
 Probar cada caso desde cuatro sesiones independientes o con usuarios temporales:
 
-1. Consulta intenta insertar y actualizar: debe recibir `42501`.
+1. Responsable del Área intenta insertar o actualizar registros de auditoría: debe recibir `42501`; la carga de evidencias propias sí debe funcionar.
 2. Auditor crea y edita: debe funcionar; eliminar o ejecutar `review_record` debe fallar.
 3. Supervisor puede leer y aprobar mediante RPC, pero no editar campos funcionales.
 4. Administrador puede ejecutar CRUD y aprobación.

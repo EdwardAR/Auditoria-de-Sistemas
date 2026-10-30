@@ -15,7 +15,7 @@ describe('DemoRepository', () => {
     expect(updated.approval_status).toBe('Pendiente')
   })
 
-  it('impide crear a un usuario de consulta', async () => {
+  it('impide crear registros operativos al responsable del área', async () => {
     const repository = new DemoRepository(demoUsers[3])
     await expect(repository.create('controls', { name: 'Control' })).rejects.toThrow('no permite crear')
   })
@@ -50,12 +50,12 @@ describe('DemoRepository', () => {
   })
 
   it('limita al responsable del área a sus expedientes y evidencias', async () => {
-    const repository = new DemoRepository(demoUsers[4])
+    const repository = new DemoRepository(demoUsers[3])
     const invoices = await repository.listInvoices()
-    expect(invoices.every((invoice) => invoice.responsible_user_id === demoUsers[4].id)).toBe(true)
+    expect(invoices.every((invoice) => invoice.responsible_user_id === demoUsers[3].id)).toBe(true)
     await expect(repository.createInvoice({})).rejects.toThrow('no permite crear')
     const metadata = await repository.addInvoiceEvidence(invoices[0].id, { name: 'sustento.pdf', type: 'application/pdf', size: 1024 })
-    expect(metadata.uploaded_by).toBe(demoUsers[4].id)
+    expect(metadata.uploaded_by).toBe(demoUsers[3].id)
   })
 
   it('conserva historial cuando se reprograma una actividad', async () => {

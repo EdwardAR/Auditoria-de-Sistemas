@@ -24,7 +24,8 @@ export function AuthProvider({ children }) {
       if (sessionId) {
         const profile = getDemoDatabase().profiles.find((item) => item.id === sessionId)
         const demo = demoUsers.find((item) => item.id === sessionId)
-        if (profile) setUser({ ...profile, last_sign_in_at: demo?.last_sign_in_at })
+        if (profile && demo) setUser({ ...profile, last_sign_in_at: demo.last_sign_in_at })
+        else localStorage.removeItem(SESSION_KEY)
       }
       setLoading(false)
       return undefined

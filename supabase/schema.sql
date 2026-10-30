@@ -4,7 +4,7 @@
 create extension if not exists pgcrypto;
 
 do $$ begin
-  create type public.app_role as enum ('Administrador', 'Auditor', 'Supervisor', 'Consulta');
+  create type public.app_role as enum ('Administrador', 'Auditor', 'Supervisor', 'Responsable del Área');
 exception when duplicate_object then null; end $$;
 
 do $$ begin
@@ -15,7 +15,7 @@ create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   full_name text not null check (char_length(full_name) between 3 and 100),
   email text not null,
-  role public.app_role not null default 'Consulta',
+  role public.app_role not null default 'Responsable del Área',
   created_at timestamptz not null default now()
 );
 
@@ -191,7 +191,7 @@ returns trigger language plpgsql security definer set search_path = public
 as $$
 begin
   insert into public.profiles (id, full_name, email, role)
-  values (new.id, coalesce(nullif(new.raw_user_meta_data->>'full_name', ''), split_part(new.email, '@', 1)), new.email, 'Consulta')
+  values (new.id, coalesce(nullif(new.raw_user_meta_data->>'full_name', ''), split_part(new.email, '@', 1)), new.email, 'Responsable del Área')
   on conflict (id) do nothing;
   return new;
 end;

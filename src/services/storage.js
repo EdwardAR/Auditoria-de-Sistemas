@@ -24,6 +24,12 @@ function migrateDatabase(database) {
   migrated.negotiable_invoices ||= defaults.negotiable_invoices
   migrated.invoice_stage_events ||= defaults.invoice_stage_events
   migrated.evidence_metadata ||= []
+  const validProfiles = (migrated.profiles || []).filter((profile) => profile.role !== 'Consulta')
+  const defaultProfileIds = new Set(defaults.profiles.map((profile) => profile.id))
+  migrated.profiles = [
+    ...defaults.profiles.map((profile) => validProfiles.find((current) => current.id === profile.id) || profile),
+    ...validProfiles.filter((profile) => !defaultProfileIds.has(profile.id)),
+  ]
   for (const key of ['audit_program', 'audit_team', 'audit_processes', 'standards', 'audit_resources', 'audit_schedule', 'schedule_history', 'audit_evidence']) migrated[key] ??= defaults[key]
   migrated.schema_version = 3
   return migrated

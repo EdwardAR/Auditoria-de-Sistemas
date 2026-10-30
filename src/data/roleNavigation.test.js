@@ -7,17 +7,16 @@ describe('navegación por rol', () => {
     ['Auditor', 5],
     ['Supervisor', 4],
     ['Responsable del Área', 3],
-    ['Consulta', 2],
   ])('limita los módulos de %s', (role, expectedModules) => {
     expect(getRoleModules(role)).toHaveLength(expectedModules)
   })
 
-  it('usa la vista de consulta para un rol desconocido', () => {
-    expect(getRoleNavigation('Desconocido')).toBe(getRoleNavigation('Consulta'))
+  it('usa la vista más restringida para un rol desconocido', () => {
+    expect(getRoleNavigation('Desconocido')).toBe(getRoleNavigation('Responsable del Área'))
   })
 
   it('no repite rutas dentro de un rol', () => {
-    Object.keys({ Administrador: 1, Auditor: 1, Supervisor: 1, 'Responsable del Área': 1, Consulta: 1 }).forEach((role) => {
+    Object.keys({ Administrador: 1, Auditor: 1, Supervisor: 1, 'Responsable del Área': 1 }).forEach((role) => {
       const routes = getRoleNavigation(role).sections.flatMap((section) => section.items.map((item) => item.to))
       expect(new Set(routes).size).toBe(routes.length)
     })

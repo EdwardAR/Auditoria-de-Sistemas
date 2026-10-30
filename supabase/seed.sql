@@ -1,11 +1,11 @@
 -- Datos de demostración para Auditoría 360
 -- Antes de ejecutar, crear en Authentication > Users las cuentas:
--- admin@demo.edu, auditor@demo.edu, supervisor@demo.edu y consulta@demo.edu
+-- admin@demo.edu, auditor@demo.edu, supervisor@demo.edu y responsable@demo.edu
 
 update public.profiles set full_name='Valeria Mendoza', role='Administrador' where email='admin@demo.edu';
 update public.profiles set full_name='Diego Salazar', role='Auditor' where email='auditor@demo.edu';
 update public.profiles set full_name='Lucía Torres', role='Supervisor' where email='supervisor@demo.edu';
-update public.profiles set full_name='Marco Ríos', role='Consulta' where email='consulta@demo.edu';
+update public.profiles set full_name='Andrea Paredes', role='Responsable del Área' where email='responsable@demo.edu';
 
 insert into public.audits (id,title,description,owner,status,start_date,end_date,observations,approval_status,created_by,updated_by)
 values
