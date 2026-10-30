@@ -18,6 +18,7 @@ Aplicación web académica para gestionar auditorías, riesgos tecnológicos, co
 - Lectura ejecutiva de auditorías vencidas, controles bajo objetivo, incidentes abiertos y riesgos en tratamiento.
 - Flujo visual de gobierno: identificar → evaluar → tratar → aprobar → monitorear.
 - Módulos de hallazgos y planes de acción para conectar observaciones con responsables, fechas y avance de remediación.
+- Navegación reorganizada por el ciclo de auditoría; los catálogos secundarios no compiten con el flujo principal.
 - Históricos mensuales de controles y evolución de riesgos.
 - Bitácora inmutable de operaciones generada por triggers de PostgreSQL.
 - Formulario público de contacto sin permiso de lectura pública.
@@ -39,6 +40,21 @@ Navegador React
 ```
 
 La UI consume un único contrato de repositorio. Cambiar entre demo y Supabase no requiere modificar páginas ni componentes.
+
+## Mapa funcional del proyecto
+
+La aplicación se presenta siguiendo un solo ciclo de trabajo:
+
+1. **Programa de auditoría:** define organización, objetivo, alcance, equipo y periodo.
+2. **Auditorías:** registra las revisiones planificadas y su avance.
+3. **Riesgos:** identifica amenazas y calcula la exposición con probabilidad × impacto.
+4. **Controles:** relaciona medidas de protección con procesos y niveles de cumplimiento.
+5. **Hallazgos:** documenta la condición observada, el criterio y la recomendación.
+6. **Planes de acción:** asigna responsables, fechas y avance de remediación.
+7. **Incidentes:** registra eventos de seguridad y su respuesta.
+8. **Analítica:** consolida tendencias, matriz 5×5, KPIs y prioridades ejecutivas.
+
+El menú lateral muestra primero este flujo. Cronograma, normativa, seguridad de la información, perfil y bitácora quedan como funciones de seguimiento y soporte. Los recursos documentales y catálogos técnicos permanecen disponibles en el código y el repositorio para no perder trazabilidad, pero no saturan la navegación principal.
 
 ## Tecnologías
 
