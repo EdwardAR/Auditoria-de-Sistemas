@@ -6,6 +6,7 @@ import {
   ClipboardList,
   FileCheck2,
   FileSearch,
+  FileText,
   LayoutDashboard,
   ListChecks,
   ShieldAlert,
@@ -30,6 +31,7 @@ const modules = {
   incidents: { to: '/incidents', label: 'Incidentes', title: 'Incidentes de seguridad', description: 'Registro y respuesta de seguridad', icon: Activity },
   evidence: { to: '/evidence', label: 'Evidencias', title: 'Evidencias', description: 'Documentos que sustentan la revisión', icon: FileCheck2 },
   analytics: { to: '/analytics', label: 'Analítica', title: 'Analítica ejecutiva', description: 'Indicadores para tomar decisiones', icon: BarChart3 },
+  invoices: { to: '/invoices', label: 'Facturas', title: 'Facturas negociables', description: 'Expedientes y evidencias', icon: FileText },
   activity: { to: '/activity', label: 'Bitácora', title: 'Bitácora de actividad', description: 'Trazabilidad de las operaciones', icon: ClipboardCheck },
 }
 
@@ -38,27 +40,27 @@ export const ROLE_NAVIGATION = {
     description: 'Configuración, supervisión y trazabilidad general.',
     sections: [
       { label: 'Vista general', items: [dashboard, modules.program, modules.audits] },
-      { label: 'Control', items: [modules.incidents, modules.analytics, modules.activity] },
+      { label: 'Control', items: [modules.incidents, modules.invoices, modules.analytics, modules.activity] },
     ],
   },
   Auditor: {
     description: 'Ejecución de la auditoría y registro de resultados.',
     sections: [
       { label: 'Mi trabajo', items: [dashboard, modules.audits, modules.risks] },
-      { label: 'Evaluación', items: [modules.controls, modules.findings, modules.plans] },
+      { label: 'Evaluación', items: [modules.controls, modules.findings, modules.plans, modules.invoices] },
     ],
   },
   Supervisor: {
     description: 'Revisión, aprobación y seguimiento ejecutivo.',
     sections: [
       { label: 'Supervisión', items: [dashboard, modules.findings, modules.plans] },
-      { label: 'Seguimiento', items: [modules.analytics, modules.activity] },
+      { label: 'Seguimiento', items: [modules.invoices, modules.analytics, modules.activity] },
     ],
   },
   'Responsable del Área': {
     description: 'Atención de hallazgos y entrega de evidencias.',
     sections: [
-      { label: 'Mis pendientes', items: [dashboard, modules.findings, modules.plans, modules.evidence] },
+      { label: 'Mis pendientes', items: [dashboard, modules.findings, modules.plans, modules.invoices, modules.evidence] },
     ],
   },
 }

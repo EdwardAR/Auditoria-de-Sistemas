@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+  <title id="title">Ciclo operativo de auditoría</title>
+  <desc id="desc">Flujo desde programa de auditoría hasta analítica y monitoreo.</desc>
+  <style>text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#162033}.title{font-size:28px;font-weight:800}.label{font-size:16px;font-weight:700}.small{font-size:13px}.box{stroke:#d9e2ef;stroke-width:2}.line{stroke:#64748b;stroke-width:3;fill:none;marker-end:url(#arrow)}</style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="#64748b"/></marker></defs>
+  <rect width="1200" height="420" fill="#f8fafc"/>
+  <text x="50" y="54" class="title">Ciclo de gobierno, riesgo y cumplimiento</text>
+  <text x="50" y="82" class="small">El sistema conecta planificación, evidencia, decisión y seguimiento.</text>
+  <g transform="translate(48 145)">
+    <rect width="125" height="110" rx="18" fill="#eef2ff" class="box"/><text x="62" y="42" text-anchor="middle" class="label">Programa</text><text x="62" y="68" text-anchor="middle" class="small">alcance · equipo</text><text x="62" y="86" text-anchor="middle" class="small">periodo</text>
+    <path d="M125 55h28" class="line"/>
+    <rect x="153" width="125" height="110" rx="18" fill="#ecfeff" class="box"/><text x="215" y="42" text-anchor="middle" class="label">Auditorías</text><text x="215" y="68" text-anchor="middle" class="small">planificación</text><text x="215" y="86" text-anchor="middle" class="small">avance</text>
+    <path d="M278 55h28" class="line"/>
+    <rect x="306" width="125" height="110" rx="18" fill="#fff7ed" class="box"/><text x="368" y="42" text-anchor="middle" class="label">Riesgos</text><text x="368" y="68" text-anchor="middle" class="small">5 × 5</text><text x="368" y="86" text-anchor="middle" class="small">tratamiento</text>
+    <path d="M431 55h28" class="line"/>
+    <rect x="459" width="125" height="110" rx="18" fill="#dcfce7" class="box"/><text x="521" y="42" text-anchor="middle" class="label">Controles</text><text x="521" y="68" text-anchor="middle" class="small">cumplimiento</text><text x="521" y="86" text-anchor="middle" class="small">evidencia</text>
+    <path d="M584 55h28" class="line"/>
+    <rect x="612" width="125" height="110" rx="18" fill="#fef3c7" class="box"/><text x="674" y="42" text-anchor="middle" class="label">Hallazgos</text><text x="674" y="68" text-anchor="middle" class="small">criterio</text><text x="674" y="86" text-anchor="middle" class="small">recomendación</text>
+    <path d="M737 55h28" class="line"/>
+    <rect x="765" width="125" height="110" rx="18" fill="#fce7f3" class="box"/><text x="827" y="42" text-anchor="middle" class="label">Planes</text><text x="827" y="68" text-anchor="middle" class="small">responsable</text><text x="827" y="86" text-anchor="middle" class="small">remediación</text>
+    <path d="M890 55h28" class="line"/>
+    <rect x="918" width="125" height="110" rx="18" fill="#e0e7ff" class="box"/><text x="980" y="42" text-anchor="middle" class="label">Analítica</text><text x="980" y="68" text-anchor="middle" class="small">KPIs</text><text x="980" y="86" text-anchor="middle" class="small">monitoreo</text>
+  </g>
+  <text x="50" y="335" class="small">Incidentes y bitácora atraviesan el ciclo para registrar eventos, decisiones y trazabilidad.</text>
+</svg>

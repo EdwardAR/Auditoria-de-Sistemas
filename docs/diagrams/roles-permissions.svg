@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">Roles y permisos de Auditoría 360</title>
+  <desc id="desc">Matriz resumida de responsabilidades y acciones por rol.</desc>
+  <style>text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#162033}.title{font-size:28px;font-weight:800}.head{font-size:14px;font-weight:800}.cell{font-size:14px}.box{stroke:#d9e2ef;stroke-width:2}</style>
+  <rect width="1200" height="560" fill="#f8fafc"/>
+  <text x="55" y="58" class="title">Roles, decisiones y trazabilidad</text>
+  <text x="55" y="86" class="cell">La interfaz orienta; el repositorio y RLS son la autoridad final.</text>
+  <rect x="55" y="125" width="1090" height="350" rx="20" fill="#fff" class="box"/>
+  <g transform="translate(80 155)">
+    <text x="0" y="0" class="head">Rol</text><text x="230" y="0" class="head">Crear / editar</text><text x="465" y="0" class="head">Aprobar</text><text x="650" y="0" class="head">Evidencias</text><text x="860" y="0" class="head">Bitácora</text>
+    <line x1="0" y1="18" x2="1030" y2="18" stroke="#cbd5e1"/>
+    <text x="0" y="62" class="cell">Administrador</text><text x="230" y="62" class="cell">Sí</text><text x="465" y="62" class="cell">Sí</text><text x="650" y="62" class="cell">Gestiona</text><text x="860" y="62" class="cell">Consulta</text>
+    <line x1="0" y1="84" x2="1030" y2="84" stroke="#e2e8f0"/>
+    <text x="0" y="128" class="cell">Auditor</text><text x="230" y="128" class="cell">Operativo</text><text x="465" y="128" class="cell">No</text><text x="650" y="128" class="cell">Carga / descarga</text><text x="860" y="128" class="cell">No</text>
+    <line x1="0" y1="150" x2="1030" y2="150" stroke="#e2e8f0"/>
+    <text x="0" y="194" class="cell">Supervisor</text><text x="230" y="194" class="cell">No</text><text x="465" y="194" class="cell">Sí</text><text x="650" y="194" class="cell">Consulta</text><text x="860" y="194" class="cell">Consulta</text>
+    <line x1="0" y1="216" x2="1030" y2="216" stroke="#e2e8f0"/>
+    <text x="0" y="260" class="cell">Responsable del Área</text><text x="230" y="260" class="cell">Asignado</text><text x="465" y="260" class="cell">No</text><text x="650" y="260" class="cell">Propias</text><text x="860" y="260" class="cell">No</text>
+  </g>
+  <text x="80" y="445" class="cell">Aprobaciones: Pendiente → Aprobado / Rechazado · editar un registro aprobado reinicia la decisión.</text>
+</svg>

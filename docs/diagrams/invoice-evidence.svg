@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="470" viewBox="0 0 1200 470" role="img" aria-labelledby="title desc">
+  <title id="title">Flujo de facturas negociables y evidencias</title>
+  <desc id="desc">Ocho etapas del expediente con evidencias y bitácora.</desc>
+  <style>text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#162033}.title{font-size:28px;font-weight:800}.label{font-size:14px;font-weight:700}.small{font-size:12px}.box{stroke:#d9e2ef;stroke-width:2}.line{stroke:#64748b;stroke-width:3;fill:none;marker-end:url(#arrow)}</style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="#64748b"/></marker></defs>
+  <rect width="1200" height="470" fill="#f8fafc"/>
+  <text x="50" y="55" class="title">Facturas negociables · expediente y evidencias</text>
+  <text x="50" y="82" class="small">El responsable avanza etapas con comentario; supervisor y administrador revisan.</text>
+  <g transform="translate(50 145)">
+    <rect width="112" height="82" rx="15" fill="#eef2ff" class="box"/><text x="56" y="38" text-anchor="middle" class="label">Registro</text><text x="56" y="59" text-anchor="middle" class="small">datos base</text>
+    <path d="M112 41h18" class="line"/><rect x="130" width="112" height="82" rx="15" fill="#ecfeff" class="box"/><text x="186" y="38" text-anchor="middle" class="label">Validación</text><text x="186" y="59" text-anchor="middle" class="small">revisión inicial</text>
+    <path d="M242 41h18" class="line"/><rect x="260" width="112" height="82" rx="15" fill="#fff7ed" class="box"/><text x="316" y="38" text-anchor="middle" class="label">Verificación</text><text x="316" y="59" text-anchor="middle" class="small">documentos</text>
+    <path d="M372 41h18" class="line"/><rect x="390" width="112" height="82" rx="15" fill="#fef3c7" class="box"/><text x="446" y="38" text-anchor="middle" class="label">Aprobación</text><text x="446" y="59" text-anchor="middle" class="small">decisión</text>
+    <path d="M502 41h18" class="line"/><rect x="520" width="112" height="82" rx="15" fill="#dcfce7" class="box"/><text x="576" y="38" text-anchor="middle" class="label">Financiamiento</text><text x="576" y="59" text-anchor="middle" class="small">condiciones</text>
+    <path d="M632 41h18" class="line"/><rect x="650" width="112" height="82" rx="15" fill="#fce7f3" class="box"/><text x="706" y="38" text-anchor="middle" class="label">Desembolso</text><text x="706" y="59" text-anchor="middle" class="small">ejecución</text>
+    <path d="M762 41h18" class="line"/><rect x="780" width="112" height="82" rx="15" fill="#e0e7ff" class="box"/><text x="836" y="38" text-anchor="middle" class="label">Seguimiento</text><text x="836" y="59" text-anchor="middle" class="small">control</text>
+    <path d="M892 41h18" class="line"/><rect x="910" width="112" height="82" rx="15" fill="#e2e8f0" class="box"/><text x="966" y="38" text-anchor="middle" class="label">Cierre</text><text x="966" y="59" text-anchor="middle" class="small">expediente</text>
+  </g>
+  <rect x="175" y="300" width="850" height="75" rx="18" fill="#fff" class="box"/>
+  <text x="600" y="330" text-anchor="middle" class="label">Evidencias</text>
+  <text x="600" y="353" text-anchor="middle" class="small">PDF · DOCX · XLSX · PNG · JPG · máximo 10 MB · descarga registrada</text>
+  <path d="M600 227v73" class="line"/>
+  <text x="50" y="430" class="small">Estado: Borrador / En proceso / Observada / Cerrada · cualquier transición conserva historial.</text>
+</svg>

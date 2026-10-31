@@ -18,6 +18,7 @@ Aplicación web académica para gestionar auditorías, riesgos tecnológicos, co
 - Lectura ejecutiva de auditorías vencidas, controles bajo objetivo, incidentes abiertos y riesgos en tratamiento.
 - Flujo visual de gobierno: identificar → evaluar → tratar → aprobar → monitorear.
 - Módulos de hallazgos y planes de acción para conectar observaciones con responsables, fechas y avance de remediación.
+- Módulo de facturas negociables con filtros de cartera, seguimiento por etapas y evidencias asociadas.
 - Navegación reorganizada por el ciclo de auditoría; los catálogos secundarios no compiten con el flujo principal.
 - Históricos mensuales de controles y evolución de riesgos.
 - Bitácora inmutable de operaciones generada por triggers de PostgreSQL.
@@ -41,6 +42,34 @@ Navegador React
 
 La UI consume un único contrato de repositorio. Cambiar entre demo y Supabase no requiere modificar páginas ni componentes.
 
+### Diagramas del sistema
+
+Los diagramas siguientes representan el estado actual del proyecto. Se diseñaron
+con una composición editorial inspirada en
+[`cathrynlavery/diagram-design`](https://github.com/cathrynlavery/diagram-design):
+fondos limpios, jerarquía tipográfica, pocos colores semánticos y ausencia de
+decoración que no aporte información.
+
+#### Arquitectura y persistencia
+
+![Arquitectura de Auditoría 360](docs/diagrams/architecture.svg)
+
+#### Ciclo operativo de auditoría
+
+![Ciclo operativo de Auditoría 360](docs/diagrams/audit-flow.svg)
+
+#### Roles y permisos
+
+![Roles y permisos de Auditoría 360](docs/diagrams/roles-permissions.svg)
+
+#### Facturas negociables y evidencias
+
+![Flujo de facturas negociables y evidencias](docs/diagrams/invoice-evidence.svg)
+
+También está disponible un [board HTML autocontenido](docs/diagrams/project-flows.html)
+para abrirlo localmente, editar textos/colores y revisar las cuatro vistas en una
+sola página. Los SVG son los artefactos recomendados para documentación en GitHub.
+
 ## Mapa funcional del proyecto
 
 La aplicación se presenta siguiendo un solo ciclo de trabajo:
@@ -53,6 +82,16 @@ La aplicación se presenta siguiendo un solo ciclo de trabajo:
 6. **Planes de acción:** asigna responsables, fechas y avance de remediación.
 7. **Incidentes:** registra eventos de seguridad y su respuesta.
 8. **Analítica:** consolida tendencias, matriz 5×5, KPIs y prioridades ejecutivas.
+
+El módulo de **Facturas negociables** está disponible desde la navegación de los cuatro roles
+demo y permite consultar expedientes, filtrar la cartera, revisar vencimientos, gestionar
+evidencias y exportar los resultados visibles.
+
+El flujo de facturas comprende **Registro → Validación → Verificación → Aprobación →
+Financiamiento → Desembolso → Seguimiento → Cierre**. Cada transición exige un
+comentario, conserva el historial y puede quedar sujeta a aprobación. En modo demo,
+los archivos se guardan en IndexedDB y sus metadatos en el repositorio local; la
+paridad completa de este módulo con Supabase queda como evolución posterior.
 
 El menú lateral muestra primero este flujo. Cronograma, normativa, seguridad de la información, perfil y bitácora quedan como funciones de seguimiento y soporte. Los recursos documentales y catálogos técnicos permanecen disponibles en el código y el repositorio para no perder trazabilidad, pero no saturan la navegación principal.
 
@@ -131,7 +170,8 @@ La pantalla de acceso ofrece botones rápidos. También se puede ingresar manual
 | Supervisor | `supervisor@demo.edu` |
 | Responsable del Área | `responsable@demo.edu` |
 
-Los cambios persisten en el navegador. Para restaurar el dataset, eliminar las claves `audit360_demo_database_v1` y `audit360_demo_session_v1` del almacenamiento local.
+Los cambios persisten en el navegador. Para restaurar el dataset, eliminar las claves
+`audit360_demo_database_v3` y `audit360_demo_session_v1` del almacenamiento local.
 
 > Las credenciales demo solo existen en el adaptador local y nunca deben reutilizarse en un ambiente real.
 
@@ -141,10 +181,10 @@ Los roles representan responsabilidades distintas dentro del ciclo de auditoría
 
 | Rol | Responsabilidad | Puede hacer | No puede hacer |
 |---|---|---|---|
-| **Administrador** | Administra la plataforma y supervisa todo el proceso. | Crear, consultar, editar y eliminar auditorías, riesgos, controles e incidentes; aprobar o rechazar registros; consultar la bitácora. | No tiene restricciones funcionales en el modo demo. |
-| **Auditor** | Ejecuta revisiones y documenta evidencias. | Consultar registros; crear auditorías, riesgos, controles e incidentes; editar información operativa; exportar CSV. | Eliminar registros, aprobar/rechazar o consultar la bitácora restringida. |
-| **Supervisor** | Revisa resultados y toma decisiones de aprobación. | Consultar todos los registros; aprobar o rechazar registros con observaciones; consultar la bitácora. | Crear, editar o eliminar información operativa. |
-| **Responsable del Área** | Atiende observaciones y entrega los sustentos solicitados. | Consultar hallazgos y planes asignados; revisar sus expedientes; adjuntar evidencias. | Crear registros de auditoría, eliminar, aprobar/rechazar o consultar la bitácora. |
+| **Administrador** | Administra la plataforma y supervisa todo el proceso. | Crear, consultar, editar y eliminar registros; aprobar o rechazar; gestionar facturas y evidencias; consultar la bitácora. | No tiene restricciones funcionales en el modo demo. |
+| **Auditor** | Ejecuta revisiones y documenta evidencias. | Consultar registros; crear y editar información operativa; avanzar facturas; cargar evidencias; exportar CSV. | Eliminar registros, aprobar/rechazar o consultar la bitácora restringida. |
+| **Supervisor** | Revisa resultados y toma decisiones de aprobación. | Consultar registros; aprobar o rechazar facturas y registros; reabrir expedientes; consultar la bitácora. | Crear, editar o eliminar información operativa. |
+| **Responsable del Área** | Atiende observaciones y entrega los sustentos solicitados. | Consultar hallazgos, planes y expedientes asignados; adjuntar evidencias propias. | Crear registros, avanzar o aprobar etapas, eliminar o consultar la bitácora. |
 
 ### Flujo recomendado para la demostración
 

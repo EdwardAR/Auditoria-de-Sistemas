@@ -14,6 +14,7 @@ const ProfilePage = lazy(() => import('./pages/ProfilePage').then((module) => ({
 const ActivityPage = lazy(() => import('./pages/ActivityPage').then((module) => ({ default: module.ActivityPage })))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then((module) => ({ default: module.NotFoundPage })))
 const AuditProgramPage = lazy(() => import('./pages/AuditProgramPage').then((module) => ({ default: module.AuditProgramPage })))
+const InvoicesPage = lazy(() => import('./pages/InvoicesPage').then((module) => ({ default: module.InvoicesPage })))
 
 const fallback = <div className="grid min-h-screen place-items-center bg-slate-50"><LoaderCircle className="h-8 w-8 animate-spin text-brand-500" /></div>
 
@@ -37,6 +38,7 @@ export default function App() {
         <Route path="incidents" element={<EntityPage entity="incidents" />} />
         <Route path="findings" element={<EntityPage entity="findings" />} />
         <Route path="action-plans" element={<EntityPage entity="action_plans" />} />
+        <Route path="invoices" element={<InvoicesPage />} />
         <Route path="analytics" element={<AnalyticsPage />} />
         <Route path="information-security" element={<SecurityPage />} />
         <Route path="profile" element={<ProfilePage />} />
